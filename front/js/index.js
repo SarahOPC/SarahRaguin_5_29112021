@@ -1,1 +1,1 @@
-getProducts();
+console.log(getProducts());

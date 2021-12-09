@@ -1,14 +1,14 @@
 // fonction pour communiquer avec l'API et récupérer les données.
 
 function getProducts() {
-    fetch("http://localhost:3000/api/products")
+    return fetch("http://localhost:3000/api/products")
         .then (function(response){
         if (response.ok){
             return response.json();
         }
         })
         .then (function(data){
-            return addElement();
+            return getElements(data);
         })
         .catch (function(err){
             console.log("Erreur : " + err)
@@ -16,21 +16,25 @@ function getProducts() {
 }
 
 // va chercher les éléments un par un dans l'API pour chaque produit
-function getElements(){
+function getElements(data){
+    console.log(data [0].name);
+    let products;
     for(let i = 0; i<data.length; i ++){
 // variable stockant les éléments de chaque produit à chaque tour de boucle
-        let product = data[i];
-// variable permettant de stocker les éléments Json de chaque produit dans un objet js
-        let products = JSON.parse(product);
-// retourne les éléments de chaque produit dans le html
-        addElement();
-}
+        addElement(product);
+    }
+    return products;
 }
 
-// cré un nouvel élément et ajouter des éléments dedans
-function addElement () {
+// crée un nouvel élément et ajouter des éléments dedans
+function addElement (product) {
+    let myLink = document.createElement("a");
+    myLink.href = product._id
+
   let newDiv = document.createElement("div");
-  let newContent = document.createTextNode(products._id, products.name, products.imageUrl, products.altText, products.description);
+    newDiv.appendChild( myLink )
+
+  let newContent = document.createTextNode(product._id, product.name, product.imageUrl, product.altText, product.description);
   newDiv.appendChild(newContent);
 
 // ajoute le nouvel élément créé et son contenu dans le DOM
