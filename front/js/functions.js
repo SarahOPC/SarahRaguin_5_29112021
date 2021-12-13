@@ -16,46 +16,30 @@ function getProducts() {
 }
 
 // va chercher les éléments un par un dans l'API pour chaque produit
-function getElements(data){
-    let products;
-    for(let i = 0; i<data.length; i ++){
-        console.log(data[i]._id);
-        console.log(data[i].name);
-        console.log(data[i].imageUrl);
-        console.log(data[i].altTxt);
-        console.log(data[i].description);
-// variable stockant les éléments de chaque produit à chaque tour de boucle
-        addElement(product);
-    }
-    return products;
-}
+// crée un nouvel élément et ajoute des éléments dedans
+function getElements(data) {
+    for(let products of data){
 
-// crée un nouvel élément et ajouter des éléments dedans
-function addElement (product) {
-    let myLink = document.createElement("a");
-    myLink.href = product._id;
+        let myLink = document.createElement("a");
+        let myName = document.createElement("h3");
+        let myImage = document.createElement("img");
+        let myAltTxt = document.createElement("alt");
+        let myDescription = document.createElement("p");
+            
+        myLink.textContent = products._id;
+        myName.textContent = products.name;
+        myImage.textContent = products.imageUrl;
+        myAltTxt.textContent = products.altTxt;
+        myDescription.textContent = products.description;
 
-    let myName = document.createElement("h3");
-    myName.h3 = product.name;
-
-    let myImage = document.createElement("img");
-    myImage.img = product.imageUrl;
-
-    let myAltTxt = document.createElement("alt");
-    myAltTxt.alt = product.altTxt;
-
-    let myDescription = document.createElement("p");
-    myDescription.p = product.description;
-
-
-    let newDiv = document.createElement("div");
-    newDiv.appendChild(myLink);
-    newDiv.appendChild(myName);
-    newDiv.appendChild(myImage);
-    newDiv.appendChild(myAltTxt);
-    newDiv.appendChild(myDescription);
-
-// ajoute le nouvel élément créé et son contenu dans le DOM
-  let currentDiv = document.getElementById('items');
-  document.body.insertBefore(newDiv, currentDiv);
+        let newDiv = document.createElement("div");
+        newDiv.appendChild(myLink);
+        newDiv.appendChild(myName);
+        newDiv.appendChild(myImage);
+        newDiv.appendChild(myAltTxt);
+        newDiv.appendChild(myDescription);
+        
+        // ajoute le nouvel élément créé et son contenu dans le DOM
+        document.getElementById('items').appendChild(newDiv);
+        }
 }
