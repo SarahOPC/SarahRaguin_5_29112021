@@ -29,6 +29,7 @@ function addDataToDom(data) {
         let myImage = document.createElement("img");
         let myAltTxt = document.createElement("alt");
         let myDescription = document.createElement("p");
+        let newDiv = document.createElement("article");
             
         myLink.href = products._id;
         myName.textContent = products.name;
@@ -36,7 +37,6 @@ function addDataToDom(data) {
         myImage.alt = products.altTxt;
         myDescription.textContent = products.description;
 
-        let newDiv = document.createElement("article");
         myLink.appendChild(newDiv);
         newDiv.appendChild(myName);
         newDiv.appendChild(myImage);
@@ -44,7 +44,7 @@ function addDataToDom(data) {
         newDiv.appendChild(myDescription);
         
         // ajoute le nouvel élément créé et son contenu dans le DOM
-        document.getElementById('items').appendChild(newDiv);
+        document.getElementById('items').appendChild(myLink);
         }
 }
 //--------------------------------------------------------------//
