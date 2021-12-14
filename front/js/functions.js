@@ -1,4 +1,8 @@
-// fonction pour communiquer avec l'API et récupérer les données.
+//--------------------------------------------------------------//
+//--------------------- Functions for Index---------------------//
+//--------------------------------------------------------------//
+
+//fonction pour communiquer avec l'API et récupérer les données.
 
 function getProducts() {
     return fetch("http://localhost:3000/api/products")
@@ -8,7 +12,7 @@ function getProducts() {
         }
         })
         .then (function(data){
-            return getElements(data);
+            return addDataToDom(data);
         })
         .catch (function(err){
             console.log("Erreur : " + err)
@@ -17,7 +21,7 @@ function getProducts() {
 
 // va chercher les éléments un par un dans l'API pour chaque produit
 // crée un nouvel élément et ajoute des éléments dedans
-function getElements(data) {
+function addDataToDom(data) {
     for(let products of data){
 
         let myLink = document.createElement("a");
@@ -26,14 +30,14 @@ function getElements(data) {
         let myAltTxt = document.createElement("alt");
         let myDescription = document.createElement("p");
             
-        myLink.textContent = products._id;
+        myLink.href = products._id;
         myName.textContent = products.name;
-        myImage.textContent = products.imageUrl;
-        myAltTxt.textContent = products.altTxt;
+        myImage.src = products.imageUrl;
+        myImage.alt = products.altTxt;
         myDescription.textContent = products.description;
 
-        let newDiv = document.createElement("div");
-        newDiv.appendChild(myLink);
+        let newDiv = document.createElement("article");
+        myLink.appendChild(newDiv);
         newDiv.appendChild(myName);
         newDiv.appendChild(myImage);
         newDiv.appendChild(myAltTxt);
@@ -43,3 +47,33 @@ function getElements(data) {
         document.getElementById('items').appendChild(newDiv);
         }
 }
+//--------------------------------------------------------------//
+//--------------------- Functions for Index---------------------//
+//--------------------------------------------------------------//
+
+//----------------------------------------------------------------//
+//--------------------- Functions for Product---------------------//
+//----------------------------------------------------------------//
+
+
+
+
+//----------------------------------------------------------------//
+//--------------------- Functions for Product---------------------//
+//----------------------------------------------------------------//
+
+//--------------------------------------------------------------//
+//---------------------- Functions for Cart---------------------//
+//--------------------------------------------------------------//
+
+//--------------------------------------------------------------//
+//---------------------- Functions for Cart---------------------//
+//--------------------------------------------------------------//
+
+//---------------------------------------------------------------------//
+//--------------------- Functions for Confirmation---------------------//
+//---------------------------------------------------------------------//
+
+//---------------------------------------------------------------------//
+//--------------------- Functions for Confirmation---------------------//
+//---------------------------------------------------------------------//
