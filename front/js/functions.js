@@ -55,7 +55,16 @@ function addDataToDom(data) {
 //--------------------- Functions for Product---------------------//
 //----------------------------------------------------------------//
 
+function getProductOneByOne(){
 
+}
+
+
+
+/*function getProductOneByOne(productName){
+    let product = new URLSearchParams(window.location.search);
+    return product.get(productName);
+}*/
 
 
 //----------------------------------------------------------------//
