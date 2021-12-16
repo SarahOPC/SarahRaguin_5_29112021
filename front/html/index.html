@@ -10,7 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet" />
-
+    
+    <script src="../js/functions.js"></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
 
@@ -47,9 +49,12 @@
           <h1>Nos produits</h1>
           <h2>Une gamme d'articles exclusifs</h2>
         </div>
-        <section class="items" id="items"> 
-        <!--
-          <a href=products._id>
+        <section class="items" id="items">
+          <script>
+            getProducts();
+          </script>
+          <!--
+            <a href=products._id>
             <article>
               <img src="products.imageUrl" alt="products.altText">
               <h3 class="productName">"products.name"</h3>
@@ -83,6 +88,5 @@
         </div>
       </div>
     </footer>
-  <script src="../js/functions.js"></script>
   </body>
 </html>
