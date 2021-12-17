@@ -4,7 +4,7 @@
 
 //fonction pour communiquer avec l'API et récupérer les données.
 
-function getProducts() {
+async function getProducts() {
     return fetch("http://localhost:3000/api/products")
         .then (function(response){
         if (response.ok){
@@ -47,6 +47,7 @@ function addDataToDom(data) {
         document.getElementById('items').appendChild(myLink);
         }
 }
+
 //--------------------------------------------------------------//
 //--------------------- Functions for Index---------------------//
 //--------------------------------------------------------------//
