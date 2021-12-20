@@ -31,7 +31,7 @@ function addDataToDom(data) {
         let myDescription = document.createElement("p");
         let newDiv = document.createElement("article");
         
-        myLink.href = products._id;
+        myLink.href = "product.html?id=" + products._id;
         myName.textContent = products.name;
         myImage.src = products.imageUrl;
         myImage.alt = products.altTxt;
