@@ -27,12 +27,18 @@ async function getInformationOfProductById(id){
     });  
 }
 
+let array = JSON.parse(/* keys - values de mon json */)
 function addInfoOfProductToDom(data){
     // pour chaque élément de mon json spécifié au bon id
-    // si id ==>
-        document.getElementById(/*" id de mon html "*/).textContent(/*" contenu de mon json "*/);
-        // sinon
-        document.getElementsByClassName(/*" nom de la classe "*/).textContent(/*" contenu de mon json "*/)
+    array.forEach(element => {
+        // si id ==>
+        if (document.getElementById(/*" id de mon html "*/) !== null){
+            return element.textContent(/*" contenu de mon json "*/);   
+        } else {
+            // sinon
+            document.getElementsByClassName(/*" nom de la classe "*/).textContent(/*" contenu de mon json "*/)
+        }
+    });
     }
     
     //---------------------------------------------------------------------//
