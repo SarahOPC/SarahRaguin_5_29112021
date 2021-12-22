@@ -11,41 +11,48 @@ let finalExtractId = extractId.get("id");
 //--------------------- Functions for Product Page---------------------//
 //---------------------------------------------------------------------//
 
-let idUrl = `http://localhost:3000/api/products/${finalExtractId}`;
-async function getInformationOfProductById(id){
-    return fetch(idUrl)
+let currentProductApi = `http://localhost:3000/api/products/${finalExtractId}`;
+
+function getInformationOfProductById(){
+    return fetch(currentProductApi)
     .then (function(response){
         if (response.ok){
             return response.json();
         }
     })
     .then (function(data){
-        return addInfoOfProductToDom(data);
+        addInformationToDom(data);
     })
     .catch (function(err){
         console.log("Erreur : " + err)
     });  
 }
 
-let array = JSON.parse(/* keys - values de mon json */)
-function addInfoOfProductToDom(data){
-    // pour chaque élément de mon json spécifié au bon id
-    array.forEach(element => {
-        // si id ==>
-        if (document.getElementById(/*" id de mon html "*/) !== null){
-            return element.textContent(/*" contenu de mon json "*/);   
-        } else {
-            // sinon
-            document.getElementsByClassName(/*" nom de la classe "*/).textContent(/*" contenu de mon json "*/)
-        }
-    });
+function addInformationToDom(currentProduct){
+    document.getElementById("title").textContent = currentProduct.name;
+    document.title = currentProduct.name;
+    document.getElementById("price").textContent = currentProduct.price;
+    document.getElementById("description").textContent = currentProduct.description;
+    let select = document.getElementById("colors");
+    for (let i = 0; i < currentProduct.colors.length; i ++){
+        let currentColor = currentProduct.colors[i];
+        let option = document.createElement("option");
+        option.text = currentColor;
+        select.add(option);
     }
-    
-    //---------------------------------------------------------------------//
+
+    let productImage = document.createElement("img");
+    productImage.src = currentProduct.imageUrl;
+    productImage.alt = currentProduct.altTxt;
+    document.getElementsByClassName("item__img")[0].appendChild(productImage);
+}
+
+getInformationOfProductById();
+
+//---------------------------------------------------------------------//
 //--------------------- Functions for Product Page---------------------//
 //---------------------------------------------------------------------//
 
 // Réinjecter l'id dans le code pour trouver les bonnes informations reliées au produit ciblé dans l'url
 //faire un appel get de l'api avec id en paramètre
 
-let returnInformationsOfProduct = getInformationOfProductById(finalExtractId);
