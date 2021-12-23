@@ -12,7 +12,7 @@ async function getProducts() {
         }
     })
     .then (function(data){
-        return addDataToDom(data);
+        return addProductsDataToDom(data);
     })
     .catch (function(err){
         console.log("Erreur : " + err)
@@ -22,7 +22,7 @@ async function getProducts() {
 // va chercher les éléments un par un dans l'API pour chaque produit
 // crée un nouvel élément et ajoute des éléments dedans
 
-function addDataToDom(data) {
+function addProductsDataToDom(data) {
     for(let products of data){
         
         let myLink = document.createElement("a");
@@ -53,5 +53,5 @@ function addDataToDom(data) {
 //--------------------- Functions for Index Page---------------------//
 //-------------------------------------------------------------------//
 
-let productInformations = getProducts();
+getProducts();
 /*createElement et appendChild sont déjà utilisés dans la boucle*/
