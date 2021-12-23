@@ -56,3 +56,29 @@ getInformationOfProductById();
 //--------------------- Functions for Product Page---------------------//
 //---------------------------------------------------------------------//
 
+// Envoi au localStorage
+
+document.getElementById("addToCart").addEventListener("click", putInStorage);
+
+function putInStorage(){
+    let objJson = {
+        "cart" : [
+            {"id" : finalExtractId, "quantity" : document.getElementById("quantity").value, "colors" : document.getElementById("colors").value}
+        ]
+    }
+    let objJs = JSON.stringify(objJson);
+    localStorage.setItem("obj", objJs);
+    verifyingIdAndColors();
+}
+
+// Vérifier si id et colors existe déjà ==>
+// si oui ==> augmenter la quantité à l'objet déjà existant
+// sinon ==> ajouter un nouvel objet
+
+function verifyingIdAndColors(id, colors){
+    if (id == localStorage.getItem("id") && colors == localStorage.getItem("colors")) {
+        quantity += document.getElementById("quantity").value;
+    } else {
+        localStorage.setItem("obj", objJs);
+    }
+}
