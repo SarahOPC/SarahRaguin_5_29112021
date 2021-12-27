@@ -47,7 +47,7 @@ function addInformationToDom(currentProduct){
     productImage.src = currentProduct.imageUrl;
     productImage.alt = currentProduct.altTxt;
     document.querySelector(".item__img").appendChild(productImage);
-    // Sélectionne le premier élément du selecteur donné
+    // document.querySelector("") ==> Sélectionne le premier élément du selecteur donné
 }
 
 getInformationOfProductById();
@@ -61,13 +61,14 @@ getInformationOfProductById();
 document.getElementById("addToCart").addEventListener("click", putInStorage);
 
 function putInStorage(){
-    let objJson = {
-        "cart" : [
-            {"id" : finalExtractId, "quantity" : document.getElementById("quantity").value, "colors" : document.getElementById("colors").value}
-        ]
+    let objJs = {
+        id : finalExtractId,
+        quantity : document.getElementById("quantity").value,
+        colors : document.getElementById("colors").value
     }
-    let objJs = JSON.stringify(objJson);
-    localStorage.setItem("obj", objJs);
+    
+    let objJson = JSON.stringify(objJs);
+    localStorage.setItem("cart", objJson);
     verifyingIdAndColors();
 }
 
@@ -75,10 +76,15 @@ function putInStorage(){
 // si oui ==> augmenter la quantité à l'objet déjà existant
 // sinon ==> ajouter un nouvel objet
 
-function verifyingIdAndColors(id, colors){
-    if (id == localStorage.getItem("id") && colors == localStorage.getItem("colors")) {
+let objJson = localStorage.getItem("cart");
+let objJs = JSON.parse(objJson);
+
+let currentColors = document.getElementById("colors").value;
+
+function verifyingIdAndColors(finalExtractId, currentColors){
+    if ( finalExtractId == objJs.id && currentColors == objJs.colors ) {
         quantity += document.getElementById("quantity").value;
     } else {
-        localStorage.setItem("obj", objJs);
+        localStorage.setItem("cart", objJson);
     }
 }
