@@ -69,22 +69,21 @@ function putInStorage(){
     
     let objJson = JSON.stringify(objJs);
     localStorage.setItem("cart", objJson);
-    verifyingIdAndColors();
+    //verifyingIdAndColors();
 }
 
 // Vérifier si id et colors existe déjà ==>
 // si oui ==> augmenter la quantité à l'objet déjà existant
 // sinon ==> ajouter un nouvel objet
 
-let objJson = localStorage.getItem("cart");
-let objJs = JSON.parse(objJson);
+function verifyingIdAndColors(finalExtractId){
+    let newObjJson = localStorage.getItem("cart");
+    let newObjJs = JSON.parse(newObjJson);
+    let currentColors = window.document.getElementById("colors").value;
 
-let currentColors = document.getElementById("colors").value;
-
-function verifyingIdAndColors(finalExtractId, currentColors){
-    if ( finalExtractId == objJs.id && currentColors == objJs.colors ) {
-        quantity += document.getElementById("quantity").value;
+    if (finalExtractId === newObjJs.id && currentColors === newObjJs.colors) {
+        newObjJs.quantity += document.getElementById("quantity").value;
     } else {
-        localStorage.setItem("cart", objJson);
+        localStorage.setItem("cart", newObjJson);
     }
 }
