@@ -1,4 +1,4 @@
-let protocol = "http.//";
+let protocol = "http://";
 let domainName = "localhost:3000/api/products/";
 
 // Pour récupérer l'id dans l'URL
@@ -69,7 +69,7 @@ function putInStorage(){
     
     let objJson = JSON.stringify(objJs);
     localStorage.setItem("cart", objJson);
-    //verifyingIdAndColors();
+    verifyingIdAndColors(finalExtractId);
 }
 
 // Vérifier si id et colors existe déjà ==>
@@ -77,13 +77,14 @@ function putInStorage(){
 // sinon ==> ajouter un nouvel objet
 
 function verifyingIdAndColors(finalExtractId){
-    let newObjJson = localStorage.getItem("cart");
-    let newObjJs = JSON.parse(newObjJson);
+    let ObjJson = localStorage.getItem("cart");
+    let ObjJs = JSON.parse(ObjJson);
     let currentColors = window.document.getElementById("colors").value;
-
-    if (finalExtractId === newObjJs.id && currentColors === newObjJs.colors) {
-        newObjJs.quantity += document.getElementById("quantity").value;
+    
+    if (finalExtractId == ObjJs.id && currentColors == ObjJs.colors) {
+        ObjJs.quantity += document.getElementById("quantity").value;
+        localStorage.setItem("cart", ObjJson)
     } else {
-        localStorage.setItem("cart", newObjJson);
+        localStorage.setItem("cart", ObjJson);
     }
 }
