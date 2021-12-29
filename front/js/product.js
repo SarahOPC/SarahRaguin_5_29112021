@@ -58,7 +58,7 @@ getInformationOfProductById();
 
 // Envoi au localStorage
 
-document.getElementById("addToCart").addEventListener("click", putInStorage);
+document.getElementById("addToCart").addEventListener("click", verifyingIdAndColors);
 
 function putInStorage(){
     let objJs = {
@@ -69,7 +69,6 @@ function putInStorage(){
     
     let objJson = JSON.stringify(objJs);
     localStorage.setItem("cart", objJson);
-    verifyingIdAndColors(finalExtractId);
 }
 
 // Vérifier si id et colors existe déjà ==>
@@ -83,8 +82,9 @@ function verifyingIdAndColors(finalExtractId){
     
     if (finalExtractId == ObjJs.id && currentColors == ObjJs.colors) {
         ObjJs.quantity += document.getElementById("quantity").value;
-        localStorage.setItem("cart", ObjJson)
-    } else {
         localStorage.setItem("cart", ObjJson);
+    } else {
+        localStorage.setItem("cart", ObjJson)
     }
+    putInStorage();
 }
