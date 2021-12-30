@@ -27,7 +27,7 @@ function getInformationOfProductById(){
     })
     .catch (function(err){
         console.log("Erreur : " + err)
-    });  
+    });
 }
 
 function addInformationToDom(currentProduct){
@@ -58,33 +58,64 @@ getInformationOfProductById();
 
 // Envoi au localStorage
 
-document.getElementById("addToCart").addEventListener("click", verifyingIdAndColors);
+document.getElementById("addToCart").addEventListener("click", saveInStorage);
 
-function putInStorage(){
+function putInStorage(cart){
+    // Créer un panier vide si n'existe pas déjà
+    if(cart == null){
+        cart = [];
+    }
+    // Créer l'objet Js avec ses valeurs
     let objJs = {
         id : finalExtractId,
-        quantity : document.getElementById("quantity").value,
+        quantity : parseInt(document.getElementById("quantity").value),
         colors : document.getElementById("colors").value
     }
-    
-    let objJson = JSON.stringify(objJs);
-    localStorage.setItem("cart", objJson);
+
+    // Ajouter l'objet Js au panier
+    cart.push(objJs);
+
+    // Le passer en Json pour le mettre dans le localStorage
+    cart = JSON.stringify(cart);
+    localStorage.setItem("cart", cart);
 }
 
-// Vérifier si id et colors existe déjà ==>
-// si oui ==> augmenter la quantité à l'objet déjà existant
-// sinon ==> ajouter un nouvel objet
+// Vérifie si id et colors existe déjà dans le panier
+function productExist(finalExtractId, currentColors, cart){
+    // Cherche et renvoit la valeur du premier élément respectant les conditions données
+    return cart.find(product => product.id == finalExtractId && product.colors == currentColors)
+}
 
-function verifyingIdAndColors(finalExtractId){
-    let ObjJson = localStorage.getItem("cart");
-    let ObjJs = JSON.parse(ObjJson);
+function saveInStorage(finalExtractId){
+    // Pour récupérer l'id dans l'URL
+    let productUrlId = window.location.search;
+
+    // Pour extraire l'id avec URLSearchParams
+    let extractId = new URLSearchParams(productUrlId);
+    let id_url = extractId.get("id");
+
+    // Aller chercher le panier
+    let cart = localStorage.getItem("cart");
+    cart = JSON.parse(cart); // Passe du Json au Js
     let currentColors = window.document.getElementById("colors").value;
+
+    if(cart != null && productExist(id_url, currentColors, cart)) {
+        let product_exist = productExist(id_url, currentColors, cart);
+
+        cart.forEach(product => {
+            if( product.id == product_exist.id &&
+                product.colors == product_exist.colors ){
+
+                let oldQuantity = parseInt(product.quantity);
+                let newQuantity = parseInt(document.getElementById("quantity").value);
+                product.quantity = oldQuantity + newQuantity
+            }
+        })
     
-    if (finalExtractId == ObjJs.id && currentColors == ObjJs.colors) {
-        ObjJs.quantity += document.getElementById("quantity").value;
-        localStorage.setItem("cart", ObjJson);
+        cart = JSON.stringify(cart);
+        localStorage.setItem("cart", cart);
+        
     } else {
-        localStorage.setItem("cart", ObjJson)
+        putInStorage(cart);
     }
-    putInStorage();
 }
