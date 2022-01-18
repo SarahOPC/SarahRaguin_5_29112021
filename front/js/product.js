@@ -86,7 +86,7 @@ function productExist(finalExtractId, currentColors, cart){
     return cart.find(product => product.id == finalExtractId && product.colors == currentColors)
 }
 
-function saveInStorage(finalExtractId){
+function saveInStorage(){
     // Pour récupérer l'id dans l'URL
     let productUrlId = window.location.search;
 
