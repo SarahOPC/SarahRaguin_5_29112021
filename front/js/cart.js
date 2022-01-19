@@ -1,5 +1,6 @@
-function getInformationFromLocalStorageId(){
-    let productFromApi = `http://localhost:3000/api/products/${product.id}`;
+function getInformationFromLocalStorageId(productId){
+    let productFromApi = "http://localhost:3000/api/products/" + productId;
+    console.log(productFromApi);
     return fetch(productFromApi)
     .then (function(response){
         if (response.ok){
@@ -14,19 +15,25 @@ function getInformationFromLocalStorageId(){
     });
 }
 
-function getElementsForCart(data){
-    let actualCart = JSON.parse(localStorage.getItem("cart"));
-    actualCart.forEach(product => {
-        let productId = product.id;
-        let productQuantity = product.quantity;
-        let productColor = product.colors});
-
-//Grâce aux id, aller chercher dans l'api les informations relatives aux produits
-
-//let varTitle = document.getElementsByTagName("h2");
-//let colorTitle = varTitle.querySelector("p");
-//let priceOfTitle = varTitle.querySelectorAll("p")[1];
-
-
-
+function getElementsForCart(product){
+    document.getElementsByTagName("h2").textContent = product.name;
+    console.log(product.name);
+    let productImage = document.createElement("img");
+        productImage.src = product.imageUrl;
+        productImage.alt = product.altTxt;
+        document.querySelector(".cart__item__img").appendChild(productImage);
+    console.log(product.imageUrl);
+    console.log(product.altTxt);
+    document.querySelectorAll(".cart__item__content__description p")[1].textContent = product.price;
+    console.log(product.price);
 }
+
+let actualCart = JSON.parse(localStorage.getItem("cart"));
+actualCart.forEach(product => {
+    document.querySelector(".cart__item__content__description p").textContent = product.colors;
+    console.log(product.colors);
+    document.getElementsByClassName("cart__item__content__settings__quantity").value = product.quantity;
+    console.log(product.quantity);
+
+getInformationFromLocalStorageId(product.id);
+});
