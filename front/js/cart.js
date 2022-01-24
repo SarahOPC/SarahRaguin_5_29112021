@@ -33,13 +33,11 @@ let actualCart = JSON.parse(localStorage.getItem("cart"));
 
 let i = 0;
 actualCart.forEach(product => {
-    
     // Création des éléments du DOM
-    while (product != null){
-        i++;
-    }
-    let article = document.createElement("article" + i);
-    
+    let article = document.createElement("article");
+    let currentArticleName = "article_" + i;
+    i++;
+    article.setAttribute("id", currentArticleName);
     let cart__item__img = document.createElement("cart__item__img")
     let productImage = document.createElement("img");
     
@@ -64,12 +62,12 @@ actualCart.forEach(product => {
     productColor.after(productPrice);
     
     //Insertion des éléments du DOM
-    document.getElementById("cart__items").appendChild(article);
+    document.getElementById("cart__items").appendChild(currentArticleName);
 
-    document.querySelector("article").appendChild(cart__item__img);
+    document.querySelector("article_" + i).appendChild(cart__item__img);
     document.querySelector("cart__item__img").appendChild(productImage);
     
-    document.querySelector("article").appendChild(cart__item__content);
+    document.querySelector("article_" + i).appendChild(cart__item__content);
     
     document.getElementById("cart__item__content").appendChild(cart__item__content__description);
     document.getElementById("cart__item__content__description").appendChild(productName);
