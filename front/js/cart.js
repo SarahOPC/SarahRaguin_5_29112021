@@ -29,22 +29,26 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let article = document.createElement("article");
     let currentArticleName = "cart__item__" + i;
     article.setAttribute("id", currentArticleName);
+    article.setAttribute("class", "cart__item");
     
     // cart__item__img et img
     let cart__item__img = document.createElement("div");
     let currentImgName = "cart__item__img__" + i;
     cart__item__img.setAttribute("id", currentImgName);
+    cart__item__img.setAttribute("class", "cart__item__img");
     let productImage = document.createElement("img");
     
     // cart__item__content
     let cart__item__content = document.createElement("div");
     let currentContent = "cart__item__content__" + i;
     cart__item__content.setAttribute("id", currentContent);
+    cart__item__content.setAttribute("class", "cart__item__content");
     
     // cart__item__content__description
     let cart__item__content__description = document.createElement("div");
     let currentDescription = "cart__item__content__description__" + i;
     cart__item__content__description.setAttribute("id", currentDescription);
+    cart__item__content__description.setAttribute("class", "cart__item__content__description");
     
     // h2
     let productName = document.createElement("h2");
@@ -65,11 +69,13 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let cart__item__content__settings = document.createElement("div");
     let currentSettings = "cart__item__content__settings__" + i;
     cart__item__content__settings.setAttribute("id", currentSettings);
+    cart__item__content__settings.setAttribute("class", "cart__item__content__settings");
     
     // cart__item__content__settings__quantity
     let cart__item__content__settings__quantity = document.createElement("div");
     let currentQuantity = "cart__item__content__settings__quantity__" + i;
     cart__item__content__settings__quantity.setAttribute("id", currentQuantity);
+    cart__item__content__settings__quantity.setAttribute("class", "cart__item__content__settings__quantity");
     
     // p
     let pQuantity = document.createElement("p");
@@ -80,6 +86,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let cart__item__content__settings__delete = document.createElement("div");
     let currentDelete = "cart__item__content__settings__delete__" + i;
     cart__item__content__settings__delete.setAttribute("id", currentDelete);
+    cart__item__content__settings__delete.setAttribute("class", "cart__item__content__settings__delete");
     
     // Insertion des éléments dans les différentes div dans l'article
     document.getElementById("cart__items").appendChild(article);
