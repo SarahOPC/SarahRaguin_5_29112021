@@ -77,16 +77,33 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     cart__item__content__settings__quantity.setAttribute("id", currentQuantity);
     cart__item__content__settings__quantity.setAttribute("class", "cart__item__content__settings__quantity");
     
-    // p
+    // p quantité
     let pQuantity = document.createElement("p");
     let currentPQuantity = "pQuantity__" + i;
     pQuantity.setAttribute("id", currentPQuantity);
-    
+    pQuantity.textContent = "Qté : ";
+
+    // input quantité
+    let input = document.createElement("input");
+    let currentInput = "itemQuantity__" + i;
+    input.setAttribute("id", currentInput);
+    input.setAttribute("type", "number");
+    input.setAttribute("class", "itemQuantity");
+    input.setAttribute("name", "itemQuantity");
+    input.setAttribute("min", "1");
+    input.setAttribute("max", "100");
+
     // cart__item__content__settings__delete
     let cart__item__content__settings__delete = document.createElement("div");
     let currentDelete = "cart__item__content__settings__delete__" + i;
     cart__item__content__settings__delete.setAttribute("id", currentDelete);
     cart__item__content__settings__delete.setAttribute("class", "cart__item__content__settings__delete");
+
+    // p supprimer
+    let pDelete = document.createElement("p");
+    pDelete.setAttribute("class", "deleteItem");
+    pDelete.setAttribute("id", "deleteItem");
+    pDelete.textContent = "Supprimer";
     
     // Insertion des éléments dans les différentes div dans l'article
     document.getElementById("cart__items").appendChild(article);
@@ -108,7 +125,9 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     document.getElementById("cart\_\_item\_\_content\_\_" + i).appendChild(cart__item__content__settings);
     document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + i).appendChild(cart__item__content__settings__quantity);
     document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(pQuantity);
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(input);
     document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + i).appendChild(cart__item__content__settings__delete);
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_delete\_\_" + i).appendChild(pDelete);
     
     // Insertion des informations de chaque produit dans les div correspondantes
     productImage.setAttribute("src", currentProductFromApi.imageUrl); //-----------------------
@@ -116,7 +135,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     productName.textContent = currentProductFromApi.name; //-----------------------------------
     productPrice.textContent = currentProductFromApi.price + " €"; //---------------------------------
     document.querySelectorAll("#cart\_\_item\_\_content\_\_description\_\_" + i + " p")[0].textContent = currentProductFromLocalStorage.colors;
-    document.getElementById("pQuantity\_\_" + i).textContent = "Qté = " + currentProductFromLocalStorage.quantity;
+    let inputValue = input.setAttribute("value", currentProductFromLocalStorage.quantity);
     
     return article;
 }
@@ -137,3 +156,22 @@ function buildCart(){
 }
 
 buildCart();
+
+/*
+1 - Récupérer les quantités de chaque article du localStorage et les ajouter
+2 - Mettre ce total dans l'id "totalQuantity"
+3 - Récupérer les prix de chaque article du localStorage et les ajouter
+4 - Mettre ce total dans l'id "totalPrice"
+5 - Modifier les quantités des articles dans le DOM et le localStorage :
+6 - Utiliser le addEventListener (change, upDateLocalStorage()) sur l'input
+7 - Créer la fonction upDateLocalStorage() contenant :
+8 - localStorage.setItem("nouvelle valeur");
+9 - "nouvelle valeur" provenant de la lecture du value de l'input ie inputValue
+10 - Supprimer un article :
+11 - Utiliser le element.closest() et les id et colors
+12 - Utiliser localStorage.removeItem
+13 - let deletingOnClick = document.getElementById("pDelete")
+14 - deletingOnClick.addEventListener("click", removingItem());
+15 - removingItem() ===> if(inputValue === 0) alors localStorage.removeItem de l'article courant
+16 - article courant retrouvé grâce à element.closest(productId, colors)
+ */
