@@ -64,6 +64,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let productPrice = document.createElement("p");
     let currentProductPrice = "productPrice__" + i;
     productPrice.setAttribute("id", currentProductPrice);
+    productPrice.setAttribute("class", "productPrice");
     
     // cart__item__content__settings
     let cart__item__content__settings = document.createElement("div");
@@ -135,7 +136,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     productName.textContent = currentProductFromApi.name; //-----------------------------------
     productPrice.textContent = currentProductFromApi.price + " €"; //---------------------------------
     document.querySelectorAll("#cart\_\_item\_\_content\_\_description\_\_" + i + " p")[0].textContent = currentProductFromLocalStorage.colors;
-    let inputValue = input.setAttribute("value", currentProductFromLocalStorage.quantity);
+    input.setAttribute("value", currentProductFromLocalStorage.quantity);
     
     return article;
 }
@@ -175,3 +176,28 @@ buildCart();
 15 - removingItem() ===> if(inputValue === 0) alors localStorage.removeItem de l'article courant
 16 - article courant retrouvé grâce à element.closest(productId, colors)
  */
+
+// TotalQuantity
+function calculateTotalQuantity(){
+    let actualCart = getCartFromLocalStorage();
+    let total = 0;
+    actualCart.forEach(product => {
+        total += product.quantity;
+    });
+    document.getElementById("totalQuantity").textContent = total;
+}
+calculateTotalQuantity();
+
+// TotalPrice
+function calculateTotalPrice(){
+    let price = document.getElementsByClassName("productPrice");
+    console.log(price);
+    let total = 0;
+    price.forEach(product => {
+        let text = product.textContent;
+        let number = text.slice(0, -2);
+        let result = parseInt(number);
+        total += result;
+    })
+}
+calculateTotalPrice();
