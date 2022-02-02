@@ -30,6 +30,10 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let currentArticleName = "cart__item__" + i;
     article.setAttribute("id", currentArticleName);
     article.setAttribute("class", "cart__item");
+
+    // data-id et data-color
+    article.setAttribute("data-id", currentProductFromLocalStorage.id);
+    article.setAttribute("data-color", currentProductFromLocalStorage.colors);
     
     // cart__item__img et img
     let cart__item__img = document.createElement("div");
@@ -93,6 +97,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     input.setAttribute("name", "itemQuantity");
     input.setAttribute("min", "1");
     input.setAttribute("max", "100");
+    input.addEventListener('change', print);
 
     // cart__item__content__settings__delete
     let cart__item__content__settings__delete = document.createElement("div");
@@ -195,3 +200,12 @@ function insertTotalQuantity(totalQuantity){
 function insertTotalPrice(totalPrice){
     document.getElementById("totalPrice").textContent = totalPrice;
 }
+
+// Modification des inputs
+
+function print(){
+    console.log("truc");
+}
+
+/* function upDateValueOfInput(){
+} */
