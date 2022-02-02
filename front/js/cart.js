@@ -147,12 +147,20 @@ function insertArticleTag(currentArticleTag){
 
 function buildCart(){
     let cartContent = getCartFromLocalStorage();
+    let totalQuantity = 0;
+    let totalPrice = 0;
     let i=0;
     cartContent.forEach(async currentProductFromLocalStorage => {
         let currentProductFromApi =  await getProductFromApiById(currentProductFromLocalStorage.id);
         let currentArticleTag = getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i);
         insertArticleTag(currentArticleTag);
+        totalQuantity += currentProductFromLocalStorage.quantity;
+        totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
         i++;
+        if (i === cartContent.length){
+          insertTotalQuantity(totalQuantity); 
+          insertTotalPrice(totalPrice);
+        } 
     });
 }
 
@@ -163,6 +171,7 @@ buildCart();
 2 - Mettre ce total dans l'id "totalQuantity"
 3 - Récupérer les prix de chaque article du localStorage et les ajouter
 4 - Mettre ce total dans l'id "totalPrice"
+
 5 - Modifier les quantités des articles dans le DOM et le localStorage :
 6 - Utiliser le addEventListener (change, upDateLocalStorage()) sur l'input
 7 - Créer la fonction upDateLocalStorage() contenant :
@@ -178,26 +187,11 @@ buildCart();
  */
 
 // TotalQuantity
-function calculateTotalQuantity(){
-    let actualCart = getCartFromLocalStorage();
-    let total = 0;
-    actualCart.forEach(product => {
-        total += product.quantity;
-    });
-    document.getElementById("totalQuantity").textContent = total;
+function insertTotalQuantity(totalQuantity){
+    document.getElementById("totalQuantity").textContent = totalQuantity;
 }
-calculateTotalQuantity();
 
 // TotalPrice
-function calculateTotalPrice(){
-    let price = document.getElementsByClassName("productPrice");
-    console.log(price);
-    let total = 0;
-    price.forEach(product => {
-        let text = product.textContent;
-        let number = text.slice(0, -2);
-        let result = parseInt(number);
-        total += result;
-    })
+function insertTotalPrice(totalPrice){
+    document.getElementById("totalPrice").textContent = totalPrice;
 }
-calculateTotalPrice();
