@@ -9,7 +9,7 @@ function getCartFromLocalStorage(){
     return actualCart;
 }
 
-async function getProductFromApiById(productId){
+function getProductFromApiById(productId){
     let productFromApi = "http://localhost:3000/api/products/" + productId;
     // requête http pour récupérer les informations des produits depuis l'API
     return fetch(productFromApi)
@@ -97,7 +97,7 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     input.setAttribute("name", "itemQuantity");
     input.setAttribute("min", "1");
     input.setAttribute("max", "100");
-    input.addEventListener('change', print);
+    input.addEventListener('change', upDateValueOfInput);
 
     // cart__item__content__settings__delete
     let cart__item__content__settings__delete = document.createElement("div");
@@ -154,22 +154,20 @@ function buildCart(){
     let cartContent = getCartFromLocalStorage();
     let totalQuantity = 0;
     let totalPrice = 0;
-    let i=0;
-    cartContent.forEach(async currentProductFromLocalStorage => {
-        let currentProductFromApi =  await getProductFromApiById(currentProductFromLocalStorage.id);
+
+    for (let i = 0; i < cartContent.length; i ++){
+        //let currentProductFromLocalStorage 
+        let currentProductFromApi = getProductFromApiById(currentProductFromLocalStorage.id);
         let currentArticleTag = getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i);
         insertArticleTag(currentArticleTag);
         totalQuantity += currentProductFromLocalStorage.quantity;
         totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
-        i++;
-        if (i === cartContent.length){
-          insertTotalQuantity(totalQuantity); 
-          insertTotalPrice(totalPrice);
-        } 
-    });
+    }
 }
 
-buildCart();
+buildCart()
+    .then(insertTotalQuantity(totalQuantity))
+    .then(insertTotalPrice(totalPrice));
 
 /*
 1 - Récupérer les quantités de chaque article du localStorage et les ajouter
@@ -192,20 +190,30 @@ buildCart();
  */
 
 // TotalQuantity
-function insertTotalQuantity(totalQuantity){
+async function insertTotalQuantity(totalQuantity){
     document.getElementById("totalQuantity").textContent = totalQuantity;
 }
 
 // TotalPrice
-function insertTotalPrice(totalPrice){
+async function insertTotalPrice(totalPrice){
     document.getElementById("totalPrice").textContent = totalPrice;
 }
 
 // Modification des inputs
 
-function print(){
-    console.log("truc");
+function upDateValueOfInput(input){
+    let inputNewValue = input.value;
+    input.textContent = inputNewValue;
+    localStorage.setItem("quantity", inputNewValue);
+
+    /* if (inputNewValue <= 0){
+        localStorage.removeItem("quantity", "id", "colors");
+
+    } */
 }
 
-/* function upDateValueOfInput(){
+// Suppression d'un article
+/* 
+function removeArticle(){
+
 } */
