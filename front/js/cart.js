@@ -46,13 +46,11 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let cart__item__content = document.createElement("div");
     let currentContent = "cart__item__content__" + i;
     cart__item__content.setAttribute("id", currentContent);
-    cart__item__content.setAttribute("class", "cart__item__content");
     
     // cart__item__content__description
     let cart__item__content__description = document.createElement("div");
     let currentDescription = "cart__item__content__description__" + i;
     cart__item__content__description.setAttribute("id", currentDescription);
-    cart__item__content__description.setAttribute("class", "cart__item__content__description");
     
     // h2
     let productName = document.createElement("h2");
@@ -68,7 +66,6 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let productPrice = document.createElement("p");
     let currentProductPrice = "productPrice__" + i;
     productPrice.setAttribute("id", currentProductPrice);
-    productPrice.setAttribute("class", "productPrice");
     
     // cart__item__content__settings
     let cart__item__content__settings = document.createElement("div");
@@ -107,7 +104,6 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
 
     // p supprimer
     let pDelete = document.createElement("p");
-    pDelete.setAttribute("class", "deleteItem");
     pDelete.setAttribute("id", "deleteItem");
     pDelete.textContent = "Supprimer";
     
@@ -150,24 +146,24 @@ function insertArticleTag(currentArticleTag){
     document.getElementById("cart__items").appendChild(currentArticleTag);
 }
 
-function buildCart(){
+async function buildCart(){
     let cartContent = getCartFromLocalStorage();
     let totalQuantity = 0;
     let totalPrice = 0;
 
     for (let i = 0; i < cartContent.length; i ++){
-        //let currentProductFromLocalStorage 
-        let currentProductFromApi = getProductFromApiById(currentProductFromLocalStorage.id);
+        let currentProductFromLocalStorage = cartContent[i];
+        let currentProductFromApi = await getProductFromApiById(currentProductFromLocalStorage.id);
         let currentArticleTag = getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i);
         insertArticleTag(currentArticleTag);
         totalQuantity += currentProductFromLocalStorage.quantity;
         totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
     }
+    await insertTotalQuantity(totalQuantity);
+    await insertTotalPrice(totalPrice);
 }
 
-buildCart()
-    .then(insertTotalQuantity(totalQuantity))
-    .then(insertTotalPrice(totalPrice));
+buildCart();
 
 /*
 1 - Récupérer les quantités de chaque article du localStorage et les ajouter
@@ -190,27 +186,38 @@ buildCart()
  */
 
 // TotalQuantity
-async function insertTotalQuantity(totalQuantity){
+function insertTotalQuantity(totalQuantity){
     document.getElementById("totalQuantity").textContent = totalQuantity;
 }
 
 // TotalPrice
-async function insertTotalPrice(totalPrice){
+function insertTotalPrice(totalPrice){
     document.getElementById("totalPrice").textContent = totalPrice;
 }
 
 // Modification des inputs
 
-function upDateValueOfInput(input){
-    let inputNewValue = input.value;
-    input.textContent = inputNewValue;
-    localStorage.setItem("quantity", inputNewValue);
+function upDateValueOfInput(){
+    let inputId = this.id;
+    console.log(inputId);
+    let newValue = this.value;
+    console.log(newValue);
+    let article = inputId.closest('article');
+    console.log(article);
+    let articleId = article.dataset.id;
+    console.log(articleId);
+    
+    //input.value = newValue;
+    //localStorage.removeItem("quantity");
+    //localStorage.setItem("quantity", newValue);
 
     /* if (inputNewValue <= 0){
         localStorage.removeItem("quantity", "id", "colors");
 
     } */
 }
+
+
 
 // Suppression d'un article
 /* 
