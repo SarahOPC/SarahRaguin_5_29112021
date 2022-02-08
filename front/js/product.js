@@ -58,6 +58,10 @@ getInformationOfProductById();
 
 // Envoi au localStorage
 
+document.getElementById("addToCart").addEventListener("click", function() {
+  this.style.backgroundColor = "darkblue";
+});
+
 document.getElementById("addToCart").addEventListener("click", saveInStorage);
 
 function putInStorage(cart){
