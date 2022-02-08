@@ -106,6 +106,8 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
     let pDelete = document.createElement("p");
     pDelete.setAttribute("id", "deleteItem");
     pDelete.textContent = "Supprimer";
+    pDelete.addEventListener('click', removeArticle);
+
     
     // Insertion des éléments dans les différentes div dans l'article
     document.getElementById("cart__items").appendChild(article);
@@ -199,28 +201,42 @@ function insertTotalPrice(totalPrice){
 
 function upDateValueOfInput(){
     let inputId = this.id;
-    console.log(inputId);
-    let newValue = this.value;
-    console.log(newValue);
-    let article = inputId.closest('article');
-    console.log(article);
-    let articleId = article.dataset.id;
-    console.log(articleId);
+    let input = document.getElementById(inputId);
+    let newValue = parseInt(this.value);
     
-    //input.value = newValue;
-    //localStorage.removeItem("quantity");
-    //localStorage.setItem("quantity", newValue);
+    // Changement de la value dans le DOM
+    input.removeAttribute("value");
+    input.setAttribute("value", newValue);
+    
+    // Récupération des data-id et data-color
+    let articleId = input.closest("article").dataset.id;
+    let articleColor = input.closest("article").dataset.color;
+    
+    // Changement de la value dans le localStorage
+    let cartStorage = localStorage.getItem("cart");
+    let cart = JSON.parse(cartStorage);
 
-    /* if (inputNewValue <= 0){
-        localStorage.removeItem("quantity", "id", "colors");
+    cart.forEach(product => {
+        if (product.id === articleId && product.colors === articleColor){
+            product.quantity = newValue;
+        }
+    });
 
-    } */
+    cart = JSON.stringify(cart);
+    localStorage.setItem("cart", cart);
+
+    return cart;
+
 }
 
-
-
 // Suppression d'un article
-/* 
-function removeArticle(){
 
-} */
+function removeArticle(cart){
+    cart.forEach(product => {
+        if (product.id === articleId && product.colors === articleColor && newValue <= 0){
+            delete product;
+        }
+    // enlever le produit au clic
+    }
+
+)};
