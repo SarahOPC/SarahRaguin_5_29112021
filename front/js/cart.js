@@ -5,8 +5,8 @@
 4 - AppendChild ces articles dans le DOM
  */
 function getCartFromLocalStorage(){
-    let actualCart = JSON.parse(localStorage.getItem("cart"));
-    return actualCart;
+    let actualCartJs = JSON.parse(localStorage.getItem("cart"));
+    return actualCartJs;
 }
 
 function getProductFromApiById(productId){
@@ -104,7 +104,8 @@ function getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i)
 
     // p supprimer
     let pDelete = document.createElement("p");
-    pDelete.setAttribute("id", "deleteItem");
+    pDelete.setAttribute("class", "deleteItem");
+    pDelete.setAttribute("id", "deleteItem__" + i);
     pDelete.textContent = "Supprimer";
     pDelete.addEventListener('click', removeArticle);
 
@@ -149,12 +150,12 @@ function insertArticleTag(currentArticleTag){
 }
 
 async function buildCart(){
-    let cartContent = getCartFromLocalStorage();
+    let cartContentJs = getCartFromLocalStorage();
     let totalQuantity = 0;
     let totalPrice = 0;
 
-    for (let i = 0; i < cartContent.length; i ++){
-        let currentProductFromLocalStorage = cartContent[i];
+    for (let i = 0; i < cartContentJs.length; i ++){
+        let currentProductFromLocalStorage = cartContentJs[i];
         let currentProductFromApi = await getProductFromApiById(currentProductFromLocalStorage.id);
         let currentArticleTag = getArticleTag(currentProductFromLocalStorage, currentProductFromApi, i);
         insertArticleTag(currentArticleTag);
@@ -214,29 +215,42 @@ function upDateValueOfInput(){
     
     // Changement de la value dans le localStorage
     let cartStorage = localStorage.getItem("cart");
-    let cart = JSON.parse(cartStorage);
-
-    cart.forEach(product => {
-        if (product.id === articleId && product.colors === articleColor){
-            product.quantity = newValue;
+    let cartJs = JSON.parse(cartStorage);
+    
+    for (let i = 0; i < cartJs.length; i ++){
+        if (cartJs[i].id === articleId && cartJs[i].colors === articleColor){
+            cartJs[i].quantity = newValue;
         }
-    });
+    };
 
-    cart = JSON.stringify(cart);
-    localStorage.setItem("cart", cart);
+    cartStorage = JSON.stringify(cartJs);
+    localStorage.setItem("cart", cartStorage);
 
-    return cart;
-
+    return newValue;
 }
 
 // Suppression d'un article
+// Array.splice(indice, nb d'élémént à supprimer)
 
-function removeArticle(cart){
-    cart.forEach(product => {
-        if (product.id === articleId && product.colors === articleColor && newValue <= 0){
-            delete product;
+function removeArticle(newValue){
+
+    let deleteId = this.id;
+    let deleteP = document.getElementById(deleteId);
+    
+    let articleIdToDelete = deleteP.closest("article").dataset.id;
+    let articleColorToDelete = deleteP.closest("article").dataset.color;
+
+    let cartStorage = localStorage.getItem("cart");
+    let cartJs = JSON.parse(cartStorage);
+    console.log(cartJs);
+
+    for (let i = 0; i < cartJs.length; i ++){
+        if (cartJs[i].id === articleIdToDelete && cartJs[i].colors === articleColorToDelete && newValue <= 0){
+            cartJs[i].splice([i], 1); //...//
         }
-    // enlever le produit au clic
-    }
+    };
 
-)};
+    cartStorage = JSON.stringify(cartJs);
+    localStorage.setItem("cart", cartStorage);
+
+}
