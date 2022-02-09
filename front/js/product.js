@@ -64,10 +64,10 @@ document.getElementById("addToCart").addEventListener("click", function() {
 
 document.getElementById("addToCart").addEventListener("click", saveInStorage);
 
-function putInStorage(cart){
+function putInStorage(cartStorage){
     // Créer un panier vide si n'existe pas déjà
-    if(cart == null){
-        cart = [];
+    if(cartJs == null){
+        cartJs = [];
     }
     // Créer l'objet Js avec ses valeurs
     let objJs = {
@@ -77,17 +77,18 @@ function putInStorage(cart){
     }
 
     // Ajouter l'objet Js au panier
-    cart.push(objJs);
+    cartJs.push(objJs);
 
     // Le passer en Json pour le mettre dans le localStorage
-    cart = JSON.stringify(cart);
-    localStorage.setItem("cart", cart);
+    cartStorage = JSON.stringify(cartJs); // Passe du Js au JSON
+    localStorage.setItem("cart", cartStorage);
+    return cartStorage;
 }
 
 // Vérifie si id et colors existe déjà dans le panier
-function productExist(finalExtractId, currentColors, cart){
+function productExist(finalExtractId, currentColors, cartStorage){
     // Cherche et renvoit la valeur du premier élément respectant les conditions données
-    return cart.find(product => product.id == finalExtractId && product.colors == currentColors)
+    return cartStorage.find(product => product.id == finalExtractId && product.colors == currentColors);
 }
 
 function saveInStorage(){
@@ -99,27 +100,27 @@ function saveInStorage(){
     let id_url = extractId.get("id");
 
     // Aller chercher le panier
-    let cart = localStorage.getItem("cart");
-    cart = JSON.parse(cart); // Passe du Json au Js
+    let cartStorage = localStorage.getItem("cart");
+    cartJs = JSON.parse(cartStorage); // Passe du Json au Js
     let currentColors = window.document.getElementById("colors").value;
 
-    if(cart != null && productExist(id_url, currentColors, cart)) {
-        let product_exist = productExist(id_url, currentColors, cart);
+    if(cartJs != null && productExist(id_url, currentColors, cartJs)) {
+        let product_exist = productExist(id_url, currentColors, cartJs);
 
-        cart.forEach(product => {
+        cartJs.forEach(product => {
             if( product.id == product_exist.id &&
                 product.colors == product_exist.colors ){
 
                 let oldQuantity = parseInt(product.quantity);
                 let newQuantity = parseInt(document.getElementById("quantity").value);
-                product.quantity = oldQuantity + newQuantity
+                product.quantity = oldQuantity + newQuantity;
             }
         })
     
-        cart = JSON.stringify(cart);
-        localStorage.setItem("cart", cart);
+        cartStorage = JSON.stringify(cartJs);
+        localStorage.setItem("cart", cartStorage);
         
     } else {
-        putInStorage(cart);
+        putInStorage(cartStorage);
     }
 }
