@@ -232,7 +232,7 @@ function upDateValueOfInput(){
 // Suppression d'un article
 // Array.splice(indice, nb d'élémént à supprimer)
 
-function removeArticle(newValue){
+function removeArticle(){
 
     let deleteId = this.id;
     let deleteP = document.getElementById(deleteId);
@@ -244,13 +244,15 @@ function removeArticle(newValue){
     let cartJs = JSON.parse(cartStorage);
     console.log(cartJs);
 
-    for (let i = 0; i < cartJs.length; i ++){
-        if (cartJs[i].id === articleIdToDelete && cartJs[i].colors === articleColorToDelete && newValue <= 0){
-            cartJs[i].splice([i], 1); //...//
-        }
+    // récupérer l'id du dom (dataset.id) et le comparer à l'id de l'objet ==> object.id === dataset.id
+    cartJs.forEach(item => {
+        if (item.id === articleIdToDelete && item.colors === articleColorToDelete){
+            let index = cartJs.findIndex(key => key.id === articleIdToDelete && key.colors === articleColorToDelete);
+            cartJs.splice(index, 1);
+            window.location.reload();
     };
-
+    
     cartStorage = JSON.stringify(cartJs);
     localStorage.setItem("cart", cartStorage);
-
+    });
 }
