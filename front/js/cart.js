@@ -256,3 +256,107 @@ function removeArticle(){
     localStorage.setItem("cart", cartStorage);
     });
 }
+
+/*
+1 - Ajouter des placeholders dans les inputs (js pour html)
+2 - Ajouter les messages d'erreurs (js pour html)
+3 - Ajouter addEventListener (pour vérifier les inputs) au click du submit (pour éviter plusieurs appels)
+4 - Avec une fonction permettant de passer par les regex pour vérifications des users inputs
+5 - Dans chaque fonction vérificatrice :
+5.1 - Si passe la regex ==> validation de l'inputPassage en vert
+5.2 - Si ne passe pas la regex ==> devient rouge + message d'erreur apparaît
+5.3 - Ajouter une visibility "null" ou "visible" selon le check de la regex
+6 - Envoyer les données du user en post à l'API (objet contact et tableau produit)
+7 - Une fois toutes les regex validées, se rendre sur la page confirmation avec génération du numéro de commande
+*/
+
+// Regex testées sur https://regexr.com/
+// Regex pour adresse
+//     /([A-Z-\séèçàêùî])\w+/g // minuscules (w), majuscules, chiffres (w), - et espaces, lettres avec accent
+
+// Regex pour nom, prenom et ville
+//     /([a-zA-Z-\séèçàêùî])+/g // minuscules, majuscules, - et espaces, lettres avec accent
+
+// Regex pour email
+//     /([a-z0-9@\.])\S+/g // minuscules, chiffres, @, . et pas d'espace
+
+let regexAdress = /([A-Z-\séèçàêùî])\w+/g;
+let regexNameAndCity = /([a-zA-Z-\séèçàêùî])+/g;
+let regexEmail = /([a-z0-9@\.])\S+/g;
+let inputFirstName = document.getElementById("firstName");
+let inputLastName = document.getElementById("lastName");
+let inputAddress = document.getElementById("address");
+let inputCity = document.getElementById("city");
+let inputEmail = document.getElementById("email");
+let submitButton = document.getElementById("order");
+let form = document.querySelector(".cart__order__form");
+
+function addPlaceholders(){
+    inputFirstName.placeholder = "Jean";
+    inputLastName.placeholder = "Dupont";
+    inputAddress.placeholder = "123 Rue Des Champs Elysées";
+    inputCity.placeholder = "Paris";
+    inputEmail.placeholder = "jean.dupont@mail.fr";
+}
+
+addPlaceholders();
+
+function generateErrorMessages(){
+    document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
+    document.getElementById("lastNameErrorMsg").textContent = "Merci d'entrer votre nom de famille usuel";
+    document.getElementById("addressErrorMsg").textContent = "Nous avons besoin du numéro et du nom de la rue";
+    document.getElementById("cityErrorMsg").textContent = "Quelle est le nom exact de la ville où vous habitez ?";
+    document.getElementById("emailErrorMsg").textContent = "Nous aimerions une adresse mail valide, pensez bien au @";
+}
+
+generateErrorMessages();
+
+function validationOfRegex(){
+    if (regexNameAndCity.test(inputFirstName.value) && regexNameAndCity.test(inputLastName.value) && regexNameAndCity.test(inputCity.value) && regexAdress.test(inputAddress.value) && regexEmail.test(inputEmail.value)){
+        submitButton.disabled = false;
+        submitButton.style.backgroundColor = "darkblue";
+        turnGreen();
+    } else {
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "darkred";
+        turnRed();
+    }
+}
+
+form.addEventListener("submit", validationOfRegex);
+
+function turnGreen(){
+    if (regexNameAndCity.test(inputFirstName.value)){
+        inputFirstName.style.border = "green";
+    }
+    if (regexNameAndCity.test(inputLastName.value)){
+        inputFirstName.style.border = "green";
+    }
+    if (regexNameAndCity.test(inputCity.value)){
+        inputFirstName.style.border = "green";
+    }
+    if (regexAdress.test(inputAddress.value)){
+        inputFirstName.style.border = "green";
+    }
+    if (regexEmail.test(inputEmail.value)){
+        inputFirstName.style.border = "green";
+    }
+}
+
+function turnRed(){
+    if (!regexNameAndCity.test(inputFirstName.value)){
+        inputFirstName.style.border = "red";
+    }
+    if (!regexNameAndCity.test(inputLastName.value)){
+        inputFirstName.style.border = "red";
+    }
+    if (!regexNameAndCity.test(inputCity.value)){
+        inputFirstName.style.border = "red";
+    }
+    if (!regexAdress.test(inputAddress.value)){
+        inputFirstName.style.border = "red";
+    }
+    if (!regexEmail.test(inputEmail.value)){
+        inputFirstName.style.border = "red";
+    }
+}
