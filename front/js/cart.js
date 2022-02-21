@@ -280,11 +280,11 @@ function removeArticle(){
 //     /([a-zA-Z-\séèçàêùî])\D+/g // minuscules, majuscules, - et espaces, lettres avec accent, pas de chiffres
 
 // Regex pour email
-//     /([\w\.-]+@[\w\.-]+\.[a-z]{2,})/g // lettres, chiffres et _  et . et - puis @ puis lettres, chiffres et _ et . puis . puis au moins 2 lettres
+//     /([\w\.-]\S+@[\w\.-]\S+\.[a-z\.\S]{2,})/g // lettres, chiffres et _  et . et - puis @ puis lettres, chiffres et _ et . puis . puis au moins 2 lettres
 
 let regexAdress = /(^[0-9]{1,5}[A-Za-z-\séèçàêùî]+)/g;
 let regexNameAndCity = /([a-zA-Z-\séèçàêùî])\D+/g;
-let regexEmail = /([\w\.-]+@[\w\.-]+\.[a-z]{2,})/g;
+let regexEmail = /([\w\.-]\S+@[\w\.-]\S+\.[a-z\.\S]{2,})/g;
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
 let inputAddress = document.getElementById("address");
@@ -293,6 +293,14 @@ let inputEmail = document.getElementById("email");
 let submitButton = document.getElementById("order");
 let form = document.querySelector(".cart__order__form");
 
+// Création de l'ancre sur le bouton submit
+    let submitButtonHref = document.createElement("a");
+    submitButtonHref.setAttribute("href", "../html/confirmation.html");
+    let divSubmit = document.querySelector(".cart__order__form__submit");
+    divSubmit.appendChild(submitButtonHref);
+    submitButtonHref.appendChild(submitButton);
+
+    
 function addPlaceholders(){
     inputFirstName.placeholder = "Jean";
     inputLastName.placeholder = "Dupont";
@@ -304,91 +312,101 @@ function addPlaceholders(){
 addPlaceholders();
 
 function addEventListener(){
-    inputFirstName.addEventListener("change", validationOfFirstName);
-    inputLastName.addEventListener("change", validationOfLastName);
-    inputAddress.addEventListener("change", validationOfAdress);
-    inputCity.addEventListener("change", validationOfCity);
-    inputEmail.addEventListener("change", validationOfEmail);
+    ["change", "click", "keyup"].forEach(event => {
+        inputFirstName.addEventListener(event, validationOfFirstName);
+    });
+
+    ["change", "click", "keyup"].forEach(event => {
+        inputLastName.addEventListener(event, validationOfLastName);
+    });
+
+    ["change", "click", "keyup"].forEach(event => {
+        inputAddress.addEventListener(event, validationOfAdress);
+    });
+
+    ["change", "click", "keyup"].forEach(event => {
+        inputCity.addEventListener(event, validationOfCity);
+    });
+
+    ["change", "click", "keyup"].forEach(event => {
+        inputEmail.addEventListener(event, validationOfEmail);
+    });
 }
 
 addEventListener();
 
-form.addEventListener("submit", function(event){
-     event.preventDefault();
-     addEventListener();
-     validationOfRegex();
-})
-
 function validationOfFirstName(){
+    regexNameAndCity.lastIndex = 0;
     if (regexNameAndCity.test(inputFirstName.value)){
-        inputFirstName.style.borderColor = "#90EE90";
-        inputFirstName.style.borderWidth = "10px";
+        inputFirstName.style.backgroundColor = "#90EE90";
         document.getElementById("firstNameErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        inputFirstName.style.borderColor = "#D22B2B";
-        inputFirstName.style.borderWidth = "10px";
+        console.log("inputFirstName.value=" + inputFirstName.value + " - regexNameAndCity test=" + regexNameAndCity.test(inputFirstName.value));
+        inputFirstName.style.backgroundColor = "#D22B2B";
         document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
+        return false;
     }
 }
 
 function validationOfLastName(){
+    regexNameAndCity.lastIndex = 0;
     if (regexNameAndCity.test(inputLastName.value)){
-        inputLastName.style.borderColor = "#90EE90";
-        inputLastName.style.borderWidth = "10px";
+        inputLastName.style.backgroundColor = "#90EE90";
         document.getElementById("lastNameErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        inputLastName.style.borderColor = "#D22B2B";
-        inputLastName.style.borderWidth = "10px";
+        inputLastName.style.backgroundColor = "#D22B2B";
         document.getElementById("lastNameErrorMsg").textContent = "Merci d'entrer votre nom de famille usuel";
+        return false;
     }
 }
 
 function validationOfAdress(){
+    regexAdress.lastIndex = 0;
     if (regexAdress.test(inputAddress.value)){
-        inputAddress.style.borderColor = "#90EE90";
-        inputAddress.style.borderWidth = "10px";
+        inputAddress.style.backgroundColor = "#90EE90";
         document.getElementById("addressErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        inputAddress.style.borderColor = "#D22B2B";
-        inputAddress.style.borderWidth = "10px";
+        inputAddress.style.backgroundColor = "#D22B2B";
         document.getElementById("addressErrorMsg").textContent = "Nous avons besoin du numéro et du nom de la rue";
+        return false;
     }
 }
 
 function validationOfCity(){
+    regexNameAndCity.lastIndex = 0;
     if (regexNameAndCity.test(inputCity.value)){
-        inputCity.style.borderColor = "#90EE90";
-        inputCity.style.borderWidth = "10px";
+        inputCity.style.backgroundColor = "#90EE90";
         document.getElementById("cityErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        inputCity.style.borderColor = "#D22B2B";
-        inputCity.style.borderWidth = "10px";
+        inputCity.style.backgroundColor = "#D22B2B";
         document.getElementById("cityErrorMsg").textContent = "Quelle est le nom exact de la ville où vous habitez ?";
+        return false;
     }
 }
 
 function validationOfEmail(){
+    regexEmail.lastIndex = 0;
     if (regexEmail.test(inputEmail.value)){
-        inputEmail.style.borderColor = "#90EE90";
-        inputEmail.style.borderWidth = "10px";
+        inputEmail.style.backgroundColor = "#90EE90";
         document.getElementById("emailErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        inputEmail.style.borderColor = "#D22B2B";
-        inputEmail.style.borderWidth = "10px";
+        inputEmail.style.backgroundColor = "#D22B2B";
         document.getElementById("emailErrorMsg").textContent = "Nous aimerions une adresse mail valide, pensez bien au @";
+        return false;
     }
 }
 
-function validationOfRegex(){
-    if (validationOfFirstName() && validationOfLastName() && validationOfAdress() && validationOfCity() && validationOfEmail()){
-        submitButton.disabled = false;
+function validationOfRegex(validationOfFirstName, validationOfLastName, validationOfAdress, validationOfCity, validationOfEmail){
+    if (!validationOfFirstName() && !validationOfLastName() && !validationOfAdress() && !validationOfCity() && !validationOfEmail()){
+        submitButton.setAttribute("disabled", "disabled");
     } else {
-        submitButton.disabled = true;
-        addEventListener();
+        submitButton.removeAttribute("disabled");
     }
 }
+
+form.addEventListener("submit", validationOfRegex);
