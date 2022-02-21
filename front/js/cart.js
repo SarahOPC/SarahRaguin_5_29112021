@@ -271,18 +271,20 @@ function removeArticle(){
 */
 
 // Regex testées sur https://regexr.com/
+// et https://regex101.com/
+
 // Regex pour adresse
-//     /([A-Z-\séèçàêùî])\w+/g // minuscules (w), majuscules, chiffres (w), - et espaces, lettres avec accent
+//     /(^[0-9]{1,5}[A-Za-z-\séèçàêùî]+)/g // En début de ligne 1 à 5 chiffres compris entre 0 et 9 puis lettres majuscules ou minuscules, -, lettres avec accent
 
 // Regex pour nom, prenom et ville
-//     /([a-zA-Z-\séèçàêùî])+/g // minuscules, majuscules, - et espaces, lettres avec accent
+//     /([a-zA-Z-\séèçàêùî])\D+/g // minuscules, majuscules, - et espaces, lettres avec accent, pas de chiffres
 
 // Regex pour email
-//     /([a-z0-9@\.])\S+/g // minuscules, chiffres, @, . et pas d'espace
+//     /([\w\.-]+@[\w\.-]+\.[a-z]{2,})/g // lettres, chiffres et _  et . et - puis @ puis lettres, chiffres et _ et . puis . puis au moins 2 lettres
 
-let regexAdress = /([A-Z-\séèçàêùî])\w+/g;
-let regexNameAndCity = /([a-zA-Z-\séèçàêùî])+/g;
-let regexEmail = /([a-z0-9@\.])\S+/g;
+let regexAdress = /(^[0-9]{1,5}[A-Za-z-\séèçàêùî]+)/g;
+let regexNameAndCity = /([a-zA-Z-\séèçàêùî])\D+/g;
+let regexEmail = /([\w\.-]+@[\w\.-]+\.[a-z]{2,})/g;
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
 let inputAddress = document.getElementById("address");
@@ -301,62 +303,92 @@ function addPlaceholders(){
 
 addPlaceholders();
 
-function generateErrorMessages(){
-    document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
-    document.getElementById("lastNameErrorMsg").textContent = "Merci d'entrer votre nom de famille usuel";
-    document.getElementById("addressErrorMsg").textContent = "Nous avons besoin du numéro et du nom de la rue";
-    document.getElementById("cityErrorMsg").textContent = "Quelle est le nom exact de la ville où vous habitez ?";
-    document.getElementById("emailErrorMsg").textContent = "Nous aimerions une adresse mail valide, pensez bien au @";
+function addEventListener(){
+    inputFirstName.addEventListener("change", validationOfFirstName);
+    inputLastName.addEventListener("change", validationOfLastName);
+    inputAddress.addEventListener("change", validationOfAdress);
+    inputCity.addEventListener("change", validationOfCity);
+    inputEmail.addEventListener("change", validationOfEmail);
 }
 
-generateErrorMessages();
+addEventListener();
+
+form.addEventListener("submit", function(event){
+     event.preventDefault();
+     addEventListener();
+     validationOfRegex();
+})
+
+function validationOfFirstName(){
+    if (regexNameAndCity.test(inputFirstName.value)){
+        inputFirstName.style.borderColor = "#90EE90";
+        inputFirstName.style.borderWidth = "10px";
+        document.getElementById("firstNameErrorMsg").textContent = "Merci :)";
+        return true;
+    } else {
+        inputFirstName.style.borderColor = "#D22B2B";
+        inputFirstName.style.borderWidth = "10px";
+        document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
+    }
+}
+
+function validationOfLastName(){
+    if (regexNameAndCity.test(inputLastName.value)){
+        inputLastName.style.borderColor = "#90EE90";
+        inputLastName.style.borderWidth = "10px";
+        document.getElementById("lastNameErrorMsg").textContent = "Merci :)";
+        return true;
+    } else {
+        inputLastName.style.borderColor = "#D22B2B";
+        inputLastName.style.borderWidth = "10px";
+        document.getElementById("lastNameErrorMsg").textContent = "Merci d'entrer votre nom de famille usuel";
+    }
+}
+
+function validationOfAdress(){
+    if (regexAdress.test(inputAddress.value)){
+        inputAddress.style.borderColor = "#90EE90";
+        inputAddress.style.borderWidth = "10px";
+        document.getElementById("addressErrorMsg").textContent = "Merci :)";
+        return true;
+    } else {
+        inputAddress.style.borderColor = "#D22B2B";
+        inputAddress.style.borderWidth = "10px";
+        document.getElementById("addressErrorMsg").textContent = "Nous avons besoin du numéro et du nom de la rue";
+    }
+}
+
+function validationOfCity(){
+    if (regexNameAndCity.test(inputCity.value)){
+        inputCity.style.borderColor = "#90EE90";
+        inputCity.style.borderWidth = "10px";
+        document.getElementById("cityErrorMsg").textContent = "Merci :)";
+        return true;
+    } else {
+        inputCity.style.borderColor = "#D22B2B";
+        inputCity.style.borderWidth = "10px";
+        document.getElementById("cityErrorMsg").textContent = "Quelle est le nom exact de la ville où vous habitez ?";
+    }
+}
+
+function validationOfEmail(){
+    if (regexEmail.test(inputEmail.value)){
+        inputEmail.style.borderColor = "#90EE90";
+        inputEmail.style.borderWidth = "10px";
+        document.getElementById("emailErrorMsg").textContent = "Merci :)";
+        return true;
+    } else {
+        inputEmail.style.borderColor = "#D22B2B";
+        inputEmail.style.borderWidth = "10px";
+        document.getElementById("emailErrorMsg").textContent = "Nous aimerions une adresse mail valide, pensez bien au @";
+    }
+}
 
 function validationOfRegex(){
-    if (regexNameAndCity.test(inputFirstName.value) && regexNameAndCity.test(inputLastName.value) && regexNameAndCity.test(inputCity.value) && regexAdress.test(inputAddress.value) && regexEmail.test(inputEmail.value)){
+    if (validationOfFirstName() && validationOfLastName() && validationOfAdress() && validationOfCity() && validationOfEmail()){
         submitButton.disabled = false;
-        submitButton.style.backgroundColor = "darkblue";
-        turnGreen();
     } else {
         submitButton.disabled = true;
-        submitButton.style.backgroundColor = "darkred";
-        turnRed();
-    }
-}
-
-form.addEventListener("submit", validationOfRegex);
-
-function turnGreen(){
-    if (regexNameAndCity.test(inputFirstName.value)){
-        inputFirstName.style.border = "green";
-    }
-    if (regexNameAndCity.test(inputLastName.value)){
-        inputFirstName.style.border = "green";
-    }
-    if (regexNameAndCity.test(inputCity.value)){
-        inputFirstName.style.border = "green";
-    }
-    if (regexAdress.test(inputAddress.value)){
-        inputFirstName.style.border = "green";
-    }
-    if (regexEmail.test(inputEmail.value)){
-        inputFirstName.style.border = "green";
-    }
-}
-
-function turnRed(){
-    if (!regexNameAndCity.test(inputFirstName.value)){
-        inputFirstName.style.border = "red";
-    }
-    if (!regexNameAndCity.test(inputLastName.value)){
-        inputFirstName.style.border = "red";
-    }
-    if (!regexNameAndCity.test(inputCity.value)){
-        inputFirstName.style.border = "red";
-    }
-    if (!regexAdress.test(inputAddress.value)){
-        inputFirstName.style.border = "red";
-    }
-    if (!regexEmail.test(inputEmail.value)){
-        inputFirstName.style.border = "red";
+        addEventListener();
     }
 }
