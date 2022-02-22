@@ -173,7 +173,6 @@ buildCart();
 2 - Mettre ce total dans l'id "totalQuantity"
 3 - Récupérer les prix de chaque article du localStorage et les ajouter
 4 - Mettre ce total dans l'id "totalPrice"
-
 5 - Modifier les quantités des articles dans le DOM et le localStorage :
 6 - Utiliser le addEventListener (change, upDateLocalStorage()) sur l'input
 7 - Créer la fonction upDateLocalStorage() contenant :
@@ -242,7 +241,6 @@ function removeArticle(){
 
     let cartStorage = localStorage.getItem("cart");
     let cartJs = JSON.parse(cartStorage);
-    console.log(cartJs);
 
     // récupérer l'id du dom (dataset.id) et le comparer à l'id de l'objet ==> object.id === dataset.id
     cartJs.forEach(item => {
@@ -277,13 +275,13 @@ function removeArticle(){
 //     /(^[0-9]{1,5}[A-Za-z-\séèçàêùî]+)/g // En début de ligne 1 à 5 chiffres compris entre 0 et 9 puis lettres majuscules ou minuscules, -, lettres avec accent
 
 // Regex pour nom, prenom et ville
-//     /([a-zA-Z-\séèçàêùî])\D+/g // minuscules, majuscules, - et espaces, lettres avec accent, pas de chiffres
+//     /([a-zA-Z-\séèçàêùî]+[^0-9])/g // minuscules, majuscules, - et espaces, lettres avec accent, pas de chiffres
 
 // Regex pour email
 //     /([\w\.-]\S+@[\w\.-]\S+\.[a-z\.\S]{2,})/g // lettres, chiffres et _  et . et - puis @ puis lettres, chiffres et _ et . puis . puis au moins 2 lettres
 
 let regexAdress = /(^[0-9]{1,5}[A-Za-z-\séèçàêùî]+)/g;
-let regexNameAndCity = /([a-zA-Z-\séèçàêùî])\D+/g;
+let regexNameAndCity = /([a-zA-Z-\séèçàêùî]+[^0-9])/g;
 let regexEmail = /([\w\.-]\S+@[\w\.-]\S+\.[a-z\.\S]{2,})/g;
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
@@ -292,14 +290,6 @@ let inputCity = document.getElementById("city");
 let inputEmail = document.getElementById("email");
 let submitButton = document.getElementById("order");
 let form = document.querySelector(".cart__order__form");
-
-// Création de l'ancre sur le bouton submit
-    let submitButtonHref = document.createElement("a");
-    submitButtonHref.setAttribute("href", "../html/confirmation.html");
-    let divSubmit = document.querySelector(".cart__order__form__submit");
-    divSubmit.appendChild(submitButtonHref);
-    submitButtonHref.appendChild(submitButton);
-
     
 function addPlaceholders(){
     inputFirstName.placeholder = "Jean";
@@ -342,7 +332,6 @@ function validationOfFirstName(){
         document.getElementById("firstNameErrorMsg").textContent = "Merci :)";
         return true;
     } else {
-        console.log("inputFirstName.value=" + inputFirstName.value + " - regexNameAndCity test=" + regexNameAndCity.test(inputFirstName.value));
         inputFirstName.style.backgroundColor = "#D22B2B";
         document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
         return false;
@@ -401,12 +390,49 @@ function validationOfEmail(){
     }
 }
 
-function validationOfRegex(validationOfFirstName, validationOfLastName, validationOfAdress, validationOfCity, validationOfEmail){
-    if (!validationOfFirstName() && !validationOfLastName() && !validationOfAdress() && !validationOfCity() && !validationOfEmail()){
-        submitButton.setAttribute("disabled", "disabled");
-    } else {
+form.addEventListener("submit", validationOfRegex);
+
+function validationOfRegex(){
+    let varValidationOfFirstName = validationOfFirstName();
+    let varValidationOfLastName = validationOfLastName();
+    let varValidationOfAdress = validationOfAdress();
+    let varValidationOfCity = validationOfCity();
+    let varValidationOfEmail = validationOfEmail();
+
+    if (varValidationOfFirstName && varValidationOfLastName && varValidationOfAdress && varValidationOfCity && varValidationOfEmail){
         submitButton.removeAttribute("disabled");
+    } else {
+        submitButton.setAttribute("disabled", "disabled");
     }
 }
 
-form.addEventListener("submit", validationOfRegex);
+let actualCartJs = JSON.parse(localStorage.getItem("cart"));
+for (let i = 0; i < actualCartJs.length; i ++){
+    let productId = actualCartJs[i].id;
+    return productId;
+}
+let newUser = {
+    "contact": {
+        "firstName": inputFirstName.value,
+        "lastName": inputLastName.value,
+        "address": inputAddress,
+        "city": inputCity,
+        "email": inputEmail,
+    },
+    
+    "products": [productId]
+    
+},
+
+fetch ("http://localhost:3000/api/products/order", {
+    method:"POST",
+    headers: {
+        "Accept":"application/json",
+        "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify(newUser)
+})
+//(let urlConfirmationPage = "../html/confirmation.html",
+//    window.location.replace = urlConfirmationPage;);
+        // Ne laisse pas la possibilité à l'utilisateur de revenir en arrière
