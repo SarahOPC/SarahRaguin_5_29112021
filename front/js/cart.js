@@ -17,7 +17,8 @@ function getProductFromApiById(productId){
             if (response.ok){
                 return response.json();
             }
-        }).catch (function(err){
+        })
+        .catch (function(err){
             console.log("Erreur : " + err)
         });
 }
@@ -406,33 +407,46 @@ function validationOfRegex(){
     }
 }
 
-let actualCartJs = JSON.parse(localStorage.getItem("cart"));
-for (let i = 0; i < actualCartJs.length; i ++){
-    let productId = actualCartJs[i].id;
-    return productId;
+/* let actualCartJs = JSON.parse(localStorage.getItem("cart"));
+function returnProductId(){
+    let result = [];
+    for (let i = 0; i < actualCartJs.length; i ++){
+        let productId = actualCartJs[i].id;
+        result.push(productId);
+    }
+    return result;
 }
-let newUser = {
-    "contact": {
-        "firstName": inputFirstName.value,
-        "lastName": inputLastName.value,
-        "address": inputAddress,
-        "city": inputCity,
-        "email": inputEmail,
-    },
-    
-    "products": [productId]
-    
-},
+
+function createNewUser(result){
+    let newUser = {
+        "contact": {
+            "firstName": inputFirstName.value,
+            "lastName": inputLastName.value,
+            "address": inputAddress.value,
+            "city": inputCity.value,
+            "email": inputEmail.value
+        },
+        
+        "products": returnProductId()
+        
+    };
+    return newUser;
+}
 
 fetch ("http://localhost:3000/api/products/order", {
-    method:"POST",
+    method: "POST",
     headers: {
         "Accept":"application/json",
         "Content-Type":"application/json"
     },
-
-    body:JSON.stringify(newUser)
+    body: JSON.stringify(newUser)
 })
+.then (response => response.json())
+.then(json => console.log(json))
+.catch(err => console.log(err));
+
+
+*/
 //(let urlConfirmationPage = "../html/confirmation.html",
 //    window.location.replace = urlConfirmationPage;);
         // Ne laisse pas la possibilité à l'utilisateur de revenir en arrière
