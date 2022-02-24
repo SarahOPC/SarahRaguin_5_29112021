@@ -406,8 +406,8 @@ function validationOfRegex(){
         submitButton.setAttribute("disabled", "disabled");
     }
 }
-let actualCartJs = JSON.parse(localStorage.getItem("cart"));
 function returnProductId(){
+    let actualCartJs = JSON.parse(localStorage.getItem("cart"));
     let result = [];
     for (let i = 0; i < actualCartJs.length; i ++){
         let productId = actualCartJs[i].id;
@@ -440,7 +440,7 @@ function createNewUser(result){
     return newUser;
 }
 
-/*
+
 fetch ("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
@@ -449,11 +449,11 @@ fetch ("http://localhost:3000/api/products/order", {
     },
     body: JSON.stringify(createNewUser())
 })
-.then (response => response.json())
-.then(json => console.log(json))
+.then (response => {
+    response.json();
+    let orderId = json.orderId;
+    window.location.replace("../html/confirmation.html?orderId=" + orderId);
+})
 .catch(err => console.log(err));
- */
-
-//(let urlConfirmationPage = "../html/confirmation.html",
-//    window.location.replace = urlConfirmationPage;);
+  
         // Ne laisse pas la possibilité à l'utilisateur de revenir en arrière
