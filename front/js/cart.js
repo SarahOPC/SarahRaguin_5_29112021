@@ -399,9 +399,10 @@ function validationOfRegex(){
     let varValidationOfAdress = validationOfAdress();
     let varValidationOfCity = validationOfCity();
     let varValidationOfEmail = validationOfEmail();
-
+    
     if (varValidationOfFirstName && varValidationOfLastName && varValidationOfAdress && varValidationOfCity && varValidationOfEmail){
         submitButton.removeAttribute("disabled");
+        postForm();
     } else {
         submitButton.setAttribute("disabled", "disabled");
     }
@@ -416,7 +417,7 @@ function returnProductId(){
     return result;
 }
 
-function createNewUser(result){
+function createNewUser(){
     let firstName = inputFirstName.value;
     let lastName = inputLastName.value;
     let address = inputAddress.value;
@@ -432,28 +433,27 @@ function createNewUser(result){
             "city": city,
             "email": email
         },
-        
         "products": products
-        
-        
     };
     return newUser;
 }
 
-
-fetch ("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-        "Accept":"application/json",
-        "Content-Type":"application/json"
-    },
-    body: JSON.stringify(createNewUser())
-})
-.then (response => {
-    response.json();
-    let orderId = json.orderId;
-    window.location.replace("../html/confirmation.html?orderId=" + orderId);
-})
-.catch(err => console.log(err));
-  
+function postForm(){
+    fetch ("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            "Accept":"application/json",
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(createNewUser())
+    })
+    .then (function(response) {
+        return response.json();
+    })
+    .then (function(data){
+        let orderId = data.orderId;
+        window.location.replace("../html/confirmation.html?orderId=" + orderId);
         // Ne laisse pas la possibilité à l'utilisateur de revenir en arrière
+    })
+    .catch(err => console.log(err));
+}
