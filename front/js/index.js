@@ -1,7 +1,3 @@
-//-------------------------------------------------------------------//
-//--------------------- Functions for Index Page---------------------//
-//-------------------------------------------------------------------//
-
 //fonction pour communiquer avec l'API et récupérer les données.
 
 async function getProducts() {
@@ -48,10 +44,6 @@ function addProductsDataToDom(data) {
         document.getElementById("items").appendChild(myLink);
     }
 }
-
-//-------------------------------------------------------------------//
-//--------------------- Functions for Index Page---------------------//
-//-------------------------------------------------------------------//
 
 getProducts();
 /*createElement et appendChild sont déjà utilisés dans la boucle*/

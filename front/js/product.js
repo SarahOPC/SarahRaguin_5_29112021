@@ -9,11 +9,6 @@ let extractId = new URLSearchParams(productUrlId);
 
 let finalExtractId = extractId.get("id");
 
-//---------------------------------------------------------------------//
-//--------------------- Functions for Product Page---------------------//
-//---------------------------------------------------------------------//
-
-
 function getInformationOfProductById(){
     let currentProductApi = `http://localhost:3000/api/products/${finalExtractId}`;
     return fetch(currentProductApi)
