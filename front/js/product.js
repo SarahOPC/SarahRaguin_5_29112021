@@ -1,16 +1,22 @@
 let protocol = "http://";
 let domainName = "localhost:3000/api/products/";
 
-// Pour récupérer l'id dans l'URL
-let productUrlId = window.location.search;
+function idRetrieval() {
+    // Pour récupérer l'id dans l'URL
+    let productUrlId = window.location.search;
+    
+    // Pour extraire l'id avec URLSearchParams
+    let extractId = new URLSearchParams(productUrlId);
 
-// Pour extraire l'id avec URLSearchParams
-let extractId = new URLSearchParams(productUrlId);
+    let finalExtractId = extractId.get("id");
+    return finalExtractId;
+}
 
-let finalExtractId = extractId.get("id");
 
 function getInformationOfProductById(){
-    let currentProductApi = `http://localhost:3000/api/products/${finalExtractId}`;
+    let finalExtractId = idRetrieval();
+    let currentProductApi = protocol + domainName + finalExtractId;
+
     return fetch(currentProductApi)
     .then (function(response){
         if (response.ok){
@@ -27,7 +33,6 @@ function getInformationOfProductById(){
 
 function addInformationToDom(currentProduct){
     document.getElementById("title").textContent = currentProduct.name;
-    document.title = currentProduct.name;
     document.getElementById("price").textContent = currentProduct.price;
     document.getElementById("description").textContent = currentProduct.description;
     let select = document.getElementById("colors");
@@ -42,36 +47,33 @@ function addInformationToDom(currentProduct){
     productImage.src = currentProduct.imageUrl;
     productImage.alt = currentProduct.altTxt;
     document.querySelector(".item__img").appendChild(productImage);
-    // document.querySelector("") ==> Sélectionne le premier élément du selecteur donné
+    // document.querySelector("") ==> Sélectionne le premier élément correspondant au sélecteur donné
 }
 
 getInformationOfProductById();
 
-//---------------------------------------------------------------------//
-//--------------------- Functions for Product Page---------------------//
-//---------------------------------------------------------------------//
-
 // Envoi au localStorage
 
+// AddEventListener sur le bouton "Ajouter au Panier"
 document.getElementById("addToCart").addEventListener("click", function() {
   this.style.backgroundColor = "darkblue";
 });
-
 document.getElementById("addToCart").addEventListener("click", saveInStorage);
 
 function putInStorage(cartStorage){
-    // Créer un panier vide si n'existe pas déjà
+    let finalExtractId = idRetrieval();
+    // Crée un panier vide si n'existe pas déjà
     if(cartJs == null){
         cartJs = [];
     }
-    // Créer l'objet Js avec ses valeurs
+    // Crée l'objet Js avec ses valeurs
     let objJs = {
         id : finalExtractId,
         quantity : parseInt(document.getElementById("quantity").value),
         colors : document.getElementById("colors").value
     }
 
-    // Ajouter l'objet Js au panier
+    // Ajoute l'objet Js au panier
     cartJs.push(objJs);
 
     // Le passer en Json pour le mettre dans le localStorage
@@ -87,18 +89,14 @@ function productExist(finalExtractId, currentColors, cartStorage){
 }
 
 function saveInStorage(){
-    // Pour récupérer l'id dans l'URL
-    let productUrlId = window.location.search;
-
-    // Pour extraire l'id avec URLSearchParams
-    let extractId = new URLSearchParams(productUrlId);
-    let id_url = extractId.get("id");
+    let id_url = idRetrieval();
 
     // Aller chercher le panier
     let cartStorage = localStorage.getItem("cart");
     cartJs = JSON.parse(cartStorage); // Passe du Json au Js
     let currentColors = window.document.getElementById("colors").value;
 
+    // Si le produit existe déjà, changer quantité sinon créer un nouveau produit
     if(cartJs != null && productExist(id_url, currentColors, cartJs)) {
         let product_exist = productExist(id_url, currentColors, cartJs);
 
