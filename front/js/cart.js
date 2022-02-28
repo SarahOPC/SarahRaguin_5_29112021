@@ -22,6 +22,54 @@ function getProductFromApiById(productId){
         });
 }
 
+async function buildCart(){
+    let cartContentJs = getCartFromLocalStorage();
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    for (let i = 0; i < cartContentJs.length; i ++){
+        let currentProductFromLocalStorage = cartContentJs[i];
+        let currentProductFromApi = await getProductFromApiById(currentProductFromLocalStorage.id);
+        let currentArticleTag = addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i);
+        insertArticleTag(currentArticleTag);
+        totalQuantity += currentProductFromLocalStorage.quantity;
+        totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
+    }
+    await insertTotalQuantity(totalQuantity);
+    await insertTotalPrice(totalPrice);
+}
+
+buildCart();
+
+function addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i){
+    let currentArticle = createArticle(currentProductFromLocalStorage, i);
+    let productImage = createImage(i);
+    let productContent = createContent(i);
+    let productContentDescription = createContentDescription(i);
+    let productName = createContentDescriptionName(i);
+    let colors = createContentDescriptionColor(i);
+    let productPrice = createContentDescriptionPrice(i);
+    let productSettings = createSettings(i);
+    let settingsQuantity = createSettingsQuantity(i);
+    let settingsDelete = createSettingsDelete(i);
+
+    // Insertion des informations de chaque produit dans les div correspondantes
+    productImage.setAttribute("src", currentProductFromApi.imageUrl); //-----------------------
+    productImage.setAttribute("alt", currentProductFromApi.altTxt); //-------------------------
+    productName.textContent = currentProductFromApi.name; //-----------------------------------
+    productPrice.textContent = currentProductFromApi.price + " €"; //---------------------------------
+    document.querySelector("cart\_\_item\_\_content\_\_description\_\_" + i + " p").textContent = currentProductFromLocalStorage.colors;
+    input.setAttribute("value", currentProductFromLocalStorage.quantity);
+
+    return article;
+}
+
+function insertArticleTag(currentArticleTag){
+    document.getElementById("cart__items").appendChild(currentArticleTag);
+}
+
+
+
     // Création et appendChild des articles dans le DOM
 
 function createArticle(currentProductFromLocalStorage, i){
@@ -42,6 +90,7 @@ function createArticle(currentProductFromLocalStorage, i){
 }
 
 function createImage(i){
+    createArticle(i);
     // cart__item__img et img
     let cart__item__img = document.createElement("div");
     let currentImgName = "cart__item__img__" + i;
@@ -51,52 +100,79 @@ function createImage(i){
     
     document.getElementById("cart\_\_item\_\_" + i).appendChild(cart__item__img);
     document.getElementById("cart\_\_item\_\_img\_\_" + i).appendChild(productImage);
-
+    
     return cart__item__img;
 }
 
-function createContentDescription(i){
+function createContent(i) {
+    createArticle(i);
     // cart__item__content
     let cart__item__content = document.createElement("div");
     let currentContent = "cart__item__content__" + i;
     cart__item__content.setAttribute("id", currentContent);
-    
-    // cart__item__content__description
-    let cart__item__content__description = document.createElement("div");
-    let currentDescription = "cart__item__content__description__" + i;
-    cart__item__content__description.setAttribute("id", currentDescription);
-    
-    // h2 de descritpion (titre du produit)
-    let productName = document.createElement("h2");
-    let currentProductName = "productName__" + i;
-    productName.setAttribute("id", currentProductName);
-    
-    // 1er p de description (couleur du produit)
-    let productColor = document.createElement("p");
-    let currentProductColor = "productColor__" + i;
-    productColor.setAttribute("id", currentProductColor);
-    
-    // 2nd p de descritpion (prix du produit)
-    let productPrice = document.createElement("p");
-    let currentProductPrice = "productPrice__" + i;
-    productPrice.setAttribute("id", currentProductPrice);
-    
     document.getElementById("cart\_\_item\_\_" + i).appendChild(cart__item__content);
-    document.getElementById("cart\_\_item\_\_content\_\_" + i).appendChild(cart__item__content__description);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productName);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productColor);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productPrice);
 
     return cart__item__content;
 }
 
-function createSettingsQuantity(i){
+function createContentDescription(i) {
+    createContent(i);
+    // cart__item__content__description
+    let cart__item__content__description = document.createElement("div");
+    let currentDescription = "cart__item__content__description__" + i;
+    cart__item__content__description.setAttribute("id", currentDescription);
+    document.getElementById("cart\_\_item\_\_content\_\_" + i).appendChild(cart__item__content__description);
+
+    return cart__item__content__description;
+
+}
+
+function createContentDescriptionName(i) {
+    createContentDescription(i);
+    // h2 de descritpion (titre du produit)
+    let productName = document.createElement("h2");
+    let currentProductName = "productName__" + i;
+    productName.setAttribute("id", currentProductName);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productName);
+    
+    return productName;
+}
+
+function createContentDescriptionColor(i) {
+    createContentDescription(i);
+    // 1er p de description (couleur du produit)
+    let productColor = document.createElement("p");
+    let currentProductColor = "productColor__" + i;
+    productColor.setAttribute("id", currentProductColor);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productColor);
+
+    return productColor;
+}
+    
+function createContentDescriptionPrice(i) {
+    createContentDescription(i);
+    // 2nd p de descritpion (prix du produit)
+    let productPrice = document.createElement("p");
+    let currentProductPrice = "productPrice__" + i;
+    productPrice.setAttribute("id", currentProductPrice);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productPrice);
+
+    return productPrice;
+}
+
+function createSettings(i){
+    createContent(i);
     // cart__item__content__settings
     let cart__item__content__settings = document.createElement("div");
     let currentSettings = "cart__item__content__settings__" + i;
     cart__item__content__settings.setAttribute("id", currentSettings);
     cart__item__content__settings.setAttribute("class", "cart__item__content__settings");
 
+    return cart__item__content__settings;
+}
+
+function createSettingsQuantity(i) {
+    createSettings(i);
     // cart__item__content__settings__quantity
     let cart__item__content__settings__quantity = document.createElement("div");
     let currentQuantity = "cart__item__content__settings__quantity__" + i;
@@ -125,10 +201,11 @@ function createSettingsQuantity(i){
     document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(pQuantity);
     document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(input);
 
-    return cart__item__content__settings;
+    return cart__item__content__settings__quantity;
 }
 
 function createSettingsDelete(i){
+    createSettings(i);
     // cart__item__content__settings__delete
     let cart__item__content__settings__delete = document.createElement("div");
     let currentDelete = "cart__item__content__settings__delete__" + i;
@@ -148,41 +225,7 @@ function createSettingsDelete(i){
     return cart__item__content__settings__delete;
 }
 
-function addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i){
-    let productImage = createImage(i);
-    // Insertion des informations de chaque produit dans les div correspondantes
-    productImage.setAttribute("src", currentProductFromApi.imageUrl); //-----------------------
-    productImage.setAttribute("alt", currentProductFromApi.altTxt); //-------------------------
-    productName.textContent = currentProductFromApi.name; //-----------------------------------
-    productPrice.textContent = currentProductFromApi.price + " €"; //---------------------------------
-    document.querySelectorAll("cart\_\_item\_\_content\_\_description\_\_" + i + " p")[0].textContent = currentProductFromLocalStorage.colors;
-    input.setAttribute("value", currentProductFromLocalStorage.quantity);
 
-    return article;
-}
-
-function insertArticleTag(currentArticleTag){
-    document.getElementById("cart__items").appendChild(currentArticleTag);
-}
-
-async function buildCart(){
-    let cartContentJs = getCartFromLocalStorage();
-    let totalQuantity = 0;
-    let totalPrice = 0;
-
-    for (let i = 0; i < cartContentJs.length; i ++){
-        let currentProductFromLocalStorage = cartContentJs[i];
-        let currentProductFromApi = await getProductFromApiById(currentProductFromLocalStorage.id);
-        let currentArticleTag = addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i);
-        insertArticleTag(currentArticleTag);
-        totalQuantity += currentProductFromLocalStorage.quantity;
-        totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
-    }
-    await insertTotalQuantity(totalQuantity);
-    await insertTotalPrice(totalPrice);
-}
-
-buildCart();
 
 /*
 1 - Récupérer les quantités de chaque article du localStorage et les ajouter
