@@ -225,13 +225,22 @@ function insertTotalPrice(totalPrice){
 
 function upDateValueOfInput(){
     let inputId = this.id;
-    let input = document.getElementById(inputId);
     let newValue = parseInt(this.value);
+    let input = document.getElementById(inputId);
+
+    changeValueInDom(newValue, input);
+    let newCartJs = changeValueInLocalStorage(input, newValue);
+    putNewValueInStorage(newCartJs);
+}
+
+function changeValueInDom(newValue, input) {
     
     // Changement de la value dans le DOM
     input.removeAttribute("value");
     input.setAttribute("value", newValue);
-    
+}
+
+function changeValueInLocalStorage(input, newValue){
     // Récupération des data-id et data-color
     let articleId = input.closest("article").dataset.id;
     let articleColor = input.closest("article").dataset.color;
@@ -243,14 +252,16 @@ function upDateValueOfInput(){
     for (let i = 0; i < cartJs.length; i ++){
         if (cartJs[i].id === articleId && cartJs[i].colors === articleColor){
             cartJs[i].quantity = newValue;
+            return cartJs;
         }
     };
+    
+}
 
+function putNewValueInStorage(cartJs) {
     cartStorage = JSON.stringify(cartJs);
     localStorage.setItem("cart", cartStorage);
     window.location.reload();
-
-    return newValue;
 }
 
 // Suppression d'un article
