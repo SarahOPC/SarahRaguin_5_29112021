@@ -30,7 +30,7 @@ async function buildCart(){
     for (let i = 0; i < cartContentJs.length; i ++){
         let currentProductFromLocalStorage = cartContentJs[i];
         let currentProductFromApi = await getProductFromApiById(currentProductFromLocalStorage.id);
-        let currentArticleTag = addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i);
+        let currentArticleTag = creationOfDom(currentProductFromLocalStorage, currentProductFromApi, i);
         insertArticleTag(currentArticleTag);
         totalQuantity += currentProductFromLocalStorage.quantity;
         totalPrice += currentProductFromApi.price * currentProductFromLocalStorage.quantity;
@@ -41,41 +41,14 @@ async function buildCart(){
 
 buildCart();
 
-function addContentToTag(currentProductFromLocalStorage, currentProductFromApi, i){
-    let currentArticle = createArticle(currentProductFromLocalStorage, i);
-    let productImage = createImage(i);
-    let productContent = createContent(i);
-    let productContentDescription = createContentDescription(i);
-    let productName = createContentDescriptionName(i);
-    let colors = createContentDescriptionColor(i);
-    let productPrice = createContentDescriptionPrice(i);
-    let productSettings = createSettings(i);
-    let settingsQuantity = createSettingsQuantity(i);
-    let settingsDelete = createSettingsDelete(i);
-
-    // Insertion des informations de chaque produit dans les div correspondantes
-    productImage.setAttribute("src", currentProductFromApi.imageUrl); //-----------------------
-    productImage.setAttribute("alt", currentProductFromApi.altTxt); //-------------------------
-    productName.textContent = currentProductFromApi.name; //-----------------------------------
-    productPrice.textContent = currentProductFromApi.price + " €"; //---------------------------------
-    document.querySelector("cart\_\_item\_\_content\_\_description\_\_" + i + " p").textContent = currentProductFromLocalStorage.colors;
-    input.setAttribute("value", currentProductFromLocalStorage.quantity);
-
-    return article;
-}
-
 function insertArticleTag(currentArticleTag){
     document.getElementById("cart__items").appendChild(currentArticleTag);
 }
 
-
-
-    // Création et appendChild des articles dans le DOM
-
-function createArticle(currentProductFromLocalStorage, i){
+function createArticle(currentProductFromLocalStorage, articleNumber){
     // article
     let article = document.createElement("article");
-    let currentArticleName = "cart__item__" + i;
+    let currentArticleName = "cart__item__" + articleNumber;
     article.setAttribute("id", currentArticleName);
     article.setAttribute("class", "cart__item");
 
@@ -83,111 +56,86 @@ function createArticle(currentProductFromLocalStorage, i){
     article.setAttribute("data-id", currentProductFromLocalStorage.id);
     article.setAttribute("data-color", currentProductFromLocalStorage.colors);
     
-    // Insertion des éléments dans les différentes div dans l'article
-    document.getElementById("cart__items").appendChild(article);
-
     return article;
 }
 
-function createImage(i){
-    createArticle(i);
+function createImage(articleNumber){
     // cart__item__img et img
     let cart__item__img = document.createElement("div");
-    let currentImgName = "cart__item__img__" + i;
+    let currentImgName = "cart__item__img__" + articleNumber;
     cart__item__img.setAttribute("id", currentImgName);
     cart__item__img.setAttribute("class", "cart__item__img");
-    let productImage = document.createElement("img");
-    
-    document.getElementById("cart\_\_item\_\_" + i).appendChild(cart__item__img);
-    document.getElementById("cart\_\_item\_\_img\_\_" + i).appendChild(productImage);
     
     return cart__item__img;
 }
 
-function createContent(i) {
-    createArticle(i);
+function createContent(articleNumber) {
     // cart__item__content
     let cart__item__content = document.createElement("div");
-    let currentContent = "cart__item__content__" + i;
+    let currentContent = "cart__item__content__" + articleNumber;
     cart__item__content.setAttribute("id", currentContent);
-    document.getElementById("cart\_\_item\_\_" + i).appendChild(cart__item__content);
-
+    
     return cart__item__content;
 }
 
-function createContentDescription(i) {
-    createContent(i);
+function createContentDescription(articleNumber) {
     // cart__item__content__description
     let cart__item__content__description = document.createElement("div");
-    let currentDescription = "cart__item__content__description__" + i;
+    let currentDescription = "cart__item__content__description__" + articleNumber;
     cart__item__content__description.setAttribute("id", currentDescription);
-    document.getElementById("cart\_\_item\_\_content\_\_" + i).appendChild(cart__item__content__description);
-
+    
     return cart__item__content__description;
-
 }
 
-function createContentDescriptionName(i) {
-    createContentDescription(i);
+function createContentDescriptionName(articleNumber) {
     // h2 de descritpion (titre du produit)
     let productName = document.createElement("h2");
-    let currentProductName = "productName__" + i;
+    let currentProductName = "productName__" + articleNumber;
     productName.setAttribute("id", currentProductName);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productName);
     
     return productName;
 }
 
-function createContentDescriptionColor(i) {
-    createContentDescription(i);
-    // 1er p de description (couleur du produit)
-    let productColor = document.createElement("p");
-    let currentProductColor = "productColor__" + i;
-    productColor.setAttribute("id", currentProductColor);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productColor);
+/**
+ * 
+ * @param {*} type : Type d'élément à créer
+ * exemple : "Color" ou "Price"
+ * @returns productColor ou productPrice
+ */
 
-    return productColor;
-}
-    
-function createContentDescriptionPrice(i) {
-    createContentDescription(i);
-    // 2nd p de descritpion (prix du produit)
-    let productPrice = document.createElement("p");
-    let currentProductPrice = "productPrice__" + i;
-    productPrice.setAttribute("id", currentProductPrice);
-    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + i).appendChild(productPrice);
-
-    return productPrice;
+function addSpecifications(type, articleNumber){
+    let specification = document.createElement("p");
+    let value = "product" + type + "__" + articleNumber;
+    specification.setAttribute("id", value);
+    return specification;
 }
 
-function createSettings(i){
-    createContent(i);
+function createSettings(articleNumber){
     // cart__item__content__settings
     let cart__item__content__settings = document.createElement("div");
-    let currentSettings = "cart__item__content__settings__" + i;
+    let currentSettings = "cart__item__content__settings__" + articleNumber;
     cart__item__content__settings.setAttribute("id", currentSettings);
     cart__item__content__settings.setAttribute("class", "cart__item__content__settings");
-
+    
     return cart__item__content__settings;
 }
 
-function createSettingsQuantity(i) {
-    createSettings(i);
+function createSettingsQuantity(articleNumber) {
     // cart__item__content__settings__quantity
     let cart__item__content__settings__quantity = document.createElement("div");
-    let currentQuantity = "cart__item__content__settings__quantity__" + i;
+    let currentQuantity = "cart__item__content__settings__quantity__" + articleNumber;
     cart__item__content__settings__quantity.setAttribute("id", currentQuantity);
     cart__item__content__settings__quantity.setAttribute("class", "cart__item__content__settings__quantity");
 
     // p quantité
     let pQuantity = document.createElement("p");
-    let currentPQuantity = "pQuantity__" + i;
+    let currentPQuantity = "pQuantity__" + articleNumber;
     pQuantity.setAttribute("id", currentPQuantity);
     pQuantity.textContent = "Qté : ";
 
     // input quantité
     let input = document.createElement("input");
-    let currentInput = "itemQuantity__" + i;
+    let currentInput = "itemQuantity__" + articleNumber;
     input.setAttribute("id", currentInput);
     input.setAttribute("type", "number");
     input.setAttribute("class", "itemQuantity");
@@ -196,55 +144,72 @@ function createSettingsQuantity(i) {
     input.setAttribute("max", "100");
     input.addEventListener('change', upDateValueOfInput);
 
-    document.getElementById("cart\_\_item\_\_content\_\_" + i).appendChild(cart__item__content__settings);
-    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + i).appendChild(cart__item__content__settings__quantity);
-    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(pQuantity);
-    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + i).appendChild(input);
-
-    return cart__item__content__settings__quantity;
+    let qtty = {cart__item__content__settings__quantity, pQuantity, input};
+    return qtty;
 }
 
-function createSettingsDelete(i){
-    createSettings(i);
+function createSettingsDelete(articleNumber){
     // cart__item__content__settings__delete
     let cart__item__content__settings__delete = document.createElement("div");
-    let currentDelete = "cart__item__content__settings__delete__" + i;
+    let currentDelete = "cart__item__content__settings__delete__" + articleNumber;
     cart__item__content__settings__delete.setAttribute("id", currentDelete);
     cart__item__content__settings__delete.setAttribute("class", "cart__item__content__settings__delete");
 
     // p supprimer
     let pDelete = document.createElement("p");
     pDelete.setAttribute("class", "deleteItem");
-    pDelete.setAttribute("id", "deleteItem__" + i);
+    pDelete.setAttribute("id", "deleteItem__" + articleNumber);
     pDelete.textContent = "Supprimer";
     pDelete.addEventListener('click', removeArticle);
-
-    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + i).appendChild(cart__item__content__settings__delete);
-    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_delete\_\_" + i).appendChild(pDelete);
-
-    return cart__item__content__settings__delete;
+    
+    let supp = {cart__item__content__settings__delete, pDelete};
+    return supp;
 }
 
+function creationOfDom(currentProductFromLocalStorage, currentProductFromApi, articleNumber){
+    // Insertion des éléments dans les différentes div dans l'article
+    let article = createArticle(currentProductFromLocalStorage, articleNumber);
+    let cartItemArticle = document.getElementById("cart__items").appendChild(article);
+    let cart__item__img = createImage(articleNumber);
+    document.getElementById("cart\_\_item\_\_" + articleNumber).appendChild(cart__item__img);
+    let productImage = document.createElement("img");
+    document.getElementById("cart\_\_item\_\_img\_\_" + articleNumber).appendChild(productImage);
+    let cart__item__content = createContent(articleNumber);
+    document.getElementById("cart\_\_item\_\_" + articleNumber).appendChild(cart__item__content);
+    let cart__item__content__description = createContentDescription(articleNumber);
+    document.getElementById("cart\_\_item\_\_content\_\_" + articleNumber).appendChild(cart__item__content__description);
+    let productName = createContentDescriptionName(articleNumber);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + articleNumber).appendChild(productName);
+    let productColor = addSpecifications("Color", articleNumber);
+    let productPrice = addSpecifications("Price", articleNumber);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + articleNumber).appendChild(productColor);
+    document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + articleNumber).appendChild(productPrice);
+    let cart__item__content__settings = createSettings(articleNumber);
+    document.getElementById("cart\_\_item\_\_content\_\_" + articleNumber).appendChild(cart__item__content__settings);
+    let qtty = createSettingsQuantity(articleNumber);
+    let cart__item__content__settings__quantity = qtty.cart__item__content__settings__quantity;
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + articleNumber).appendChild(cart__item__content__settings__quantity);
+    let pQuantity = qtty.pQuantity;
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + articleNumber).appendChild(pQuantity);
+    let input = qtty.input;
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_quantity\_\_" + articleNumber).appendChild(input);
+    let supp = createSettingsDelete(articleNumber);
+    let cart__item__content__settings__delete = supp.cart__item__content__settings__delete;
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_" + articleNumber).appendChild(cart__item__content__settings__delete);
+    let pDelete = supp.pDelete;
+    document.getElementById("cart\_\_item\_\_content\_\_settings\_\_delete\_\_" + articleNumber).appendChild(pDelete);
+    
+    // Insertion des informations de chaque produit dans les div correspondantes
+    productImage.setAttribute("src", currentProductFromApi.imageUrl);
+    productImage.setAttribute("alt", currentProductFromApi.altTxt);
+    productName.textContent = currentProductFromApi.name;
+    productPrice.textContent = currentProductFromApi.price + " €";
+    let firstP = document.getElementById("cart\_\_item\_\_content\_\_description\_\_" + articleNumber);
+    firstP.querySelector("p").textContent = currentProductFromLocalStorage.colors;
+    input.setAttribute("value", currentProductFromLocalStorage.quantity);
 
-
-/*
-1 - Récupérer les quantités de chaque article du localStorage et les ajouter
-2 - Mettre ce total dans l'id "totalQuantity"
-3 - Récupérer les prix de chaque article du localStorage et les ajouter
-4 - Mettre ce total dans l'id "totalPrice"
-5 - Modifier les quantités des articles dans le DOM et le localStorage :
-6 - Utiliser le addEventListener (change, upDateLocalStorage()) sur l'input
-7 - Créer la fonction upDateLocalStorage() contenant :
-8 - localStorage.setItem("nouvelle valeur");
-9 - "nouvelle valeur" provenant de la lecture du value de l'input ie inputValue
-10 - Supprimer un article :
-11 - Utiliser le element.closest() et les id et colors
-12 - Utiliser localStorage.removeItem
-13 - let deletingOnClick = document.getElementById("pDelete")
-14 - deletingOnClick.addEventListener("click", removingItem());
-15 - removingItem() ===> if(inputValue === 0) alors localStorage.removeItem de l'article courant
-16 - article courant retrouvé grâce à element.closest(productId, colors)
- */
+    return cartItemArticle;
+}
 
 // TotalQuantity
 function insertTotalQuantity(totalQuantity){
@@ -283,6 +248,7 @@ function upDateValueOfInput(){
 
     cartStorage = JSON.stringify(cartJs);
     localStorage.setItem("cart", cartStorage);
+    window.location.reload();
 
     return newValue;
 }
