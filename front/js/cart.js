@@ -291,19 +291,6 @@ function removeArticle(){
     });
 }
 
-/*
-1 - Ajouter des placeholders dans les inputs (js pour html)
-2 - Ajouter les messages d'erreurs (js pour html)
-3 - Ajouter addEventListener (pour vérifier les inputs) au click du submit (pour éviter plusieurs appels)
-4 - Avec une fonction permettant de passer par les regex pour vérifications des users inputs
-5 - Dans chaque fonction vérificatrice :
-5.1 - Si passe la regex ==> validation de l'inputPassage en vert
-5.2 - Si ne passe pas la regex ==> devient rouge + message d'erreur apparaît
-5.3 - Ajouter une visibility "null" ou "visible" selon le check de la regex
-6 - Envoyer les données du user en post à l'API (objet contact et tableau produit)
-7 - Une fois toutes les regex validées, se rendre sur la page confirmation avec génération du numéro de commande
-*/
-
 // Regex testées sur https://regexr.com/
 // et https://regex101.com/
 
@@ -337,111 +324,48 @@ function addPlaceholders(){
 
 addPlaceholders();
 
-function addEventListener(){
-    ["change", "click", "keyup"].forEach(event => {
-        inputFirstName.addEventListener(event, validationOfFirstName);
-    });
-
-    ["change", "click", "keyup"].forEach(event => {
-        inputLastName.addEventListener(event, validationOfLastName);
-    });
-
-    ["change", "click", "keyup"].forEach(event => {
-        inputAddress.addEventListener(event, validationOfAdress);
-    });
-
-    ["change", "click", "keyup"].forEach(event => {
-        inputCity.addEventListener(event, validationOfCity);
-    });
-
-    ["change", "click", "keyup"].forEach(event => {
-        inputEmail.addEventListener(event, validationOfEmail);
-    });
+function validationOfEachInput(){
+    
+    inputFirstName.addEventListener("change", validationOfInput(regexNameAndCity, inputFirstName, "Merci d'entrer un prénom valide", "firstNameErrorMsg"));
+    inputLastName.addEventListener("change", validationOfInput(regexNameAndCity, inputLastName, "Merci d'entrer votre nom de famille usuel", "lastNameErrorMsg"));
+    inputAddress.addEventListener("change", validationOfInput(regexAdress, inputAddress, "Nous avons besoin du numéro et du nom de la rue", "addressErrorMsg"));
+    inputCity.addEventListener("change", validationOfInput(regexNameAndCity, inputCity, "Quelle est le nom exact de la ville où vous habitez ?", "cityErrorMsg"));
+    inputEmail.addEventListener("change", validationOfInput(regexEmail, inputEmail, "Nous aimerions une adresse mail valide, pensez bien au @", "emailErrorMsg"));
 }
 
-addEventListener();
+validationOfEachInput();
 
-function validationOfFirstName(){
-    regexNameAndCity.lastIndex = 0;
-    if (regexNameAndCity.test(inputFirstName.value)){
-        inputFirstName.style.backgroundColor = "#90EE90";
-        document.getElementById("firstNameErrorMsg").textContent = "Merci :)";
+function validationOfInput(regex, input, errorMessage, validationTag){
+    regex.lastIndex = 0;
+    
+    if (regex.test(input.value)){
+        input.style.backgroundColor = "#90EE90";
+        document.getElementById(validationTag).textContent = "Merci ;)";
         return true;
-    } else {
-        inputFirstName.style.backgroundColor = "#D22B2B";
-        document.getElementById("firstNameErrorMsg").textContent = "Merci d'entrer un prénom valide";
-        return false;
     }
-}
 
-function validationOfLastName(){
-    regexNameAndCity.lastIndex = 0;
-    if (regexNameAndCity.test(inputLastName.value)){
-        inputLastName.style.backgroundColor = "#90EE90";
-        document.getElementById("lastNameErrorMsg").textContent = "Merci :)";
-        return true;
-    } else {
-        inputLastName.style.backgroundColor = "#D22B2B";
-        document.getElementById("lastNameErrorMsg").textContent = "Merci d'entrer votre nom de famille usuel";
-        return false;
-    }
-}
-
-function validationOfAdress(){
-    regexAdress.lastIndex = 0;
-    if (regexAdress.test(inputAddress.value)){
-        inputAddress.style.backgroundColor = "#90EE90";
-        document.getElementById("addressErrorMsg").textContent = "Merci :)";
-        return true;
-    } else {
-        inputAddress.style.backgroundColor = "#D22B2B";
-        document.getElementById("addressErrorMsg").textContent = "Nous avons besoin du numéro et du nom de la rue";
-        return false;
-    }
-}
-
-function validationOfCity(){
-    regexNameAndCity.lastIndex = 0;
-    if (regexNameAndCity.test(inputCity.value)){
-        inputCity.style.backgroundColor = "#90EE90";
-        document.getElementById("cityErrorMsg").textContent = "Merci :)";
-        return true;
-    } else {
-        inputCity.style.backgroundColor = "#D22B2B";
-        document.getElementById("cityErrorMsg").textContent = "Quelle est le nom exact de la ville où vous habitez ?";
-        return false;
-    }
-}
-
-function validationOfEmail(){
-    regexEmail.lastIndex = 0;
-    if (regexEmail.test(inputEmail.value)){
-        inputEmail.style.backgroundColor = "#90EE90";
-        document.getElementById("emailErrorMsg").textContent = "Merci :)";
-        return true;
-    } else {
-        inputEmail.style.backgroundColor = "#D22B2B";
-        document.getElementById("emailErrorMsg").textContent = "Nous aimerions une adresse mail valide, pensez bien au @";
-        return false;
-    }
+    input.style.backgroundColor = "#D22B2B";
+    document.getElementById(validationTag).textContent = errorMessage;
+    return false;
 }
 
 form.addEventListener("submit", validationOfRegex);
 
 function validationOfRegex(){
-    let varValidationOfFirstName = validationOfFirstName();
-    let varValidationOfLastName = validationOfLastName();
-    let varValidationOfAdress = validationOfAdress();
-    let varValidationOfCity = validationOfCity();
-    let varValidationOfEmail = validationOfEmail();
+    let validationOfFirstName = validationOfInput(regexNameAndCity, inputFirstName, "Merci d'entrer un prénom valide", "firstNameErrorMsg");
+    let validationOfLastName = validationOfInput(regexNameAndCity, inputLastName, "Merci d'entrer votre nom de famille usuel", "lastNameErrorMsg");
+    let validationOfAdress = validationOfInput(regexAdress, inputAddress, "Nous avons besoin du numéro et du nom de la rue", "addressErrorMsg");
+    let validationOfCity = validationOfInput(regexNameAndCity, inputCity, "Quelle est le nom exact de la ville où vous habitez ?", "cityErrorMsg");
+    let validationOfEmail = validationOfInput(regexEmail, inputEmail, "Nous aimerions une adresse mail valide, pensez bien au @", "emailErrorMsg");
     
-    if (varValidationOfFirstName && varValidationOfLastName && varValidationOfAdress && varValidationOfCity && varValidationOfEmail){
+    if (validationOfFirstName && validationOfLastName && validationOfAdress && validationOfCity && validationOfEmail){
         submitButton.removeAttribute("disabled");
         postForm();
     } else {
         submitButton.setAttribute("disabled", "disabled");
     }
 }
+
 function returnProductId(){
     let actualCartJs = JSON.parse(localStorage.getItem("cart"));
     let result = [];
