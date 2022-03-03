@@ -55,10 +55,28 @@ getInformationOfProductById();
 // Envoi au localStorage
 
 // AddEventListener sur le bouton "Ajouter au Panier"
-document.getElementById("addToCart").addEventListener("click", function() {
-  this.style.backgroundColor = "darkblue";
+let addToCart = document.getElementById("addToCart");
+addToCart.addEventListener("click", function() {
 });
-document.getElementById("addToCart").addEventListener("click", saveInStorage);
+addToCart.addEventListener("click", saveInStorage);
+addToCart.addEventListener("click", checkQuantityAndColor);
+
+function checkQuantityAndColor() {
+    if ((document.getElementById("colors").value != "--SVP, choisissez une couleur --") && (document.getElementById("quantity").value > 0 && document.getElementById("quantity").value < 101)){
+        this.style.backgroundColor = "darkblue";
+        alert("Votre produit se trouve maintenant dans le panier !");
+    }
+    
+    else {
+        if (document.getElementById("colors").value = "--SVP, choisissez une couleur --") {
+            alert("Vous devez entrer une couleur");
+        }
+        if (document.getElementById("quantity").value <= 0 || document.getElementById("quantity").value > 100 ) {
+            alert("Vous devez entrer une quantité");
+    
+        }
+    }
+}
 
 function putInStorage(cartStorage){
     let finalExtractId = idRetrieval();
