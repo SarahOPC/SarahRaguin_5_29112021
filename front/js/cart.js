@@ -326,11 +326,11 @@ addPlaceholders();
 
 function validationOfEachInput(){
     
-    inputFirstName.addEventListener("change", validationOfInput(regexNameAndCity, inputFirstName, "Merci d'entrer un prénom valide", "firstNameErrorMsg"));
-    inputLastName.addEventListener("change", validationOfInput(regexNameAndCity, inputLastName, "Merci d'entrer votre nom de famille usuel", "lastNameErrorMsg"));
-    inputAddress.addEventListener("change", validationOfInput(regexAdress, inputAddress, "Nous avons besoin du numéro et du nom de la rue", "addressErrorMsg"));
-    inputCity.addEventListener("change", validationOfInput(regexNameAndCity, inputCity, "Quelle est le nom exact de la ville où vous habitez ?", "cityErrorMsg"));
-    inputEmail.addEventListener("change", validationOfInput(regexEmail, inputEmail, "Nous aimerions une adresse mail valide, pensez bien au @", "emailErrorMsg"));
+    inputFirstName.addEventListener("change", validationOfInput.bind(event, regexNameAndCity, inputFirstName, "Merci d'entrer un prénom valide", "firstNameErrorMsg"));
+    inputLastName.addEventListener("change", validationOfInput.bind(event, regexNameAndCity, inputLastName, "Merci d'entrer votre nom de famille usuel", "lastNameErrorMsg"));
+    inputAddress.addEventListener("change", validationOfInput.bind(event, regexAdress, inputAddress, "Nous avons besoin du numéro et du nom de la rue", "addressErrorMsg"));
+    inputCity.addEventListener("change", validationOfInput.bind(event, regexNameAndCity, inputCity, "Quelle est le nom exact de la ville où vous habitez ?", "cityErrorMsg"));
+    inputEmail.addEventListener("change", validationOfInput.bind(event, regexEmail, inputEmail, "Nous aimerions une adresse mail valide, pensez bien au @", "emailErrorMsg"));
 }
 
 validationOfEachInput();
@@ -339,13 +339,14 @@ function validationOfInput(regex, input, errorMessage, validationTag){
     regex.lastIndex = 0;
     
     if (regex.test(input.value)){
-        input.style.backgroundColor = "#90EE90";
         document.getElementById(validationTag).textContent = "Merci ;)";
+        document.getElementById(validationTag).style.color = "#90EE90";
         return true;
     }
-
-    input.style.backgroundColor = "#D22B2B";
+    
     document.getElementById(validationTag).textContent = errorMessage;
+    document.getElementById(validationTag).style.color = "#D22B2B";
+    document.getElementById(validationTag).style.fontWeight = "700";
     return false;
 }
 
