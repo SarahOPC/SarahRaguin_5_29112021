@@ -9,6 +9,8 @@ function getOrderId(){
 
     let orderId = document.getElementById("orderId");
     orderId.textContent = finalOrderId;
+
+    localStorage.clear();
 }
 
 getOrderId();
